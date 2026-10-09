@@ -1,0 +1,15 @@
+BY CARS — VERSION PRÊTE POUR GITHUB PAGES
+
+1. Décompresse ce ZIP.
+2. Dans ton dépôt GitHub, remplace les anciens fichiers par TOUT le contenu de ce dossier.
+3. Vérifie que le dossier .github/workflows/deploy.yml est bien présent sur GitHub.
+4. Commit les changements sur la branche main.
+5. GitHub > Settings > Pages > Source : GitHub Actions.
+6. GitHub > Actions : attends que "Deploy to GitHub Pages" soit vert.
+
+Le site peut se construire sans Supabase (mode démo).
+Pour activer la vraie base ensuite, ajoute les secrets GitHub :
+- VITE_SUPABASE_URL
+- VITE_SUPABASE_ANON_KEY
+
+Ne mets jamais la clé service_role dans GitHub Pages.
