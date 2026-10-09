@@ -1,0 +1,27 @@
+BY CARS — VERSION GITHUB PAGES SANS BUILD
+=========================================
+
+Cette version n'utilise PAS npm, PAS Vite et PAS Node.js.
+Donc il n'y a plus de "npm run build" susceptible de casser.
+
+1) Décompresse le ZIP.
+2) Sur GitHub, remplace les anciens fichiers par TOUT le contenu de ce dossier.
+3) Vérifie que .github/workflows/deploy.yml est bien présent.
+4) GitHub > Settings > Pages > Source : GitHub Actions.
+5) Fais un commit sur la branche main.
+
+Le site public fonctionne immédiatement en mode démonstration.
+
+ADMIN :
+https://TON-COMPTE.github.io/TON-DEPOT/admin.html
+Aucun lien vers cette page n'est affiché sur le site public.
+
+POUR SUPABASE :
+- Exécute supabase/schema.sql dans Supabase > SQL Editor.
+- Crée ton utilisateur dans Authentication > Users.
+- Ajoute son UUID dans public.admins (exemple à la fin de schema.sql).
+- Dans config.js, renseigne supabaseUrl et supabaseAnonKey.
+- Commit config.js.
+
+IMPORTANT : la clé anon/publishable peut être utilisée côté navigateur avec RLS.
+NE JAMAIS mettre la clé service_role dans config.js.

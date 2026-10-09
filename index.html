@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#08162d" />
+  <meta name="description" content="BY CARS Marseille — véhicules neufs et d'occasion, export France vers Algérie." />
+  <title>BY CARS — Marseille · Export Algérie</title>
+  <link rel="icon" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a href="#top" class="brand" aria-label="BY CARS accueil"><img src="assets/logo.svg" alt="BY CARS" /></a>
+      <nav class="desktop-nav" aria-label="Navigation principale">
+        <a href="#stock">Véhicules</a>
+        <a href="#export">Export</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="phone-pill" href="tel:+33618175911">06 18 17 59 11</a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false"><span></span><span></span></button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <a href="#stock">Véhicules</a>
+      <a href="#export">Export</a>
+      <a href="#contact">Contact</a>
+      <a href="https://wa.me/33618175911" target="_blank" rel="noreferrer">WhatsApp</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-media" aria-hidden="true"></div>
+      <div class="hero-overlay" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><span class="dot"></span> Marseille · Export Algérie</div>
+          <h1>Le showroom auto pensé pour <span>l’export.</span></h1>
+          <p>Véhicules neufs et d’occasion sélectionnés en France, prix HT clairs et contact direct depuis Marseille.</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#stock">Voir le stock <span>→</span></a>
+            <a class="btn btn-ghost" href="https://wa.me/33618175911" target="_blank" rel="noreferrer">WhatsApp</a>
+          </div>
+          <div class="hero-points">
+            <span>Prix HT affichés</span><span>Neuf & occasion</span><span>Photos détaillées</span>
+          </div>
+        </div>
+        <aside class="hero-panel reveal delay-1">
+          <div class="panel-kicker">BY CARS EXPORT</div>
+          <div class="route"><strong>France</strong><i>→</i><strong>Algérie</strong></div>
+          <p>Un parcours simple pour choisir, vérifier et préparer votre véhicule.</p>
+          <div class="steps-mini">
+            <div><b>01</b><span>Choisissez votre véhicule</span></div>
+            <div><b>02</b><span>Échangez avec notre équipe</span></div>
+            <div><b>03</b><span>Préparez votre export</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="trust-strip">
+      <div class="container trust-grid">
+        <div><b>Marseille</b><span>Showroom & départ</span></div>
+        <div><b>France → Algérie</b><span>Spécialiste export</span></div>
+        <div><b id="vehicleCountTop">Stock actualisé</b><span>Neuf & occasion</span></div>
+        <div><b>Contact direct</b><span>Téléphone & WhatsApp</span></div>
+      </div>
+    </div>
+
+    <section class="section featured" id="selection">
+      <div class="container">
+        <div class="section-head">
+          <div><div class="eyebrow dark">Sélection BY CARS</div><h2>À la une.</h2><p>Les véhicules mis en avant en ce moment.</p></div>
+          <a href="#stock" class="text-link">Voir tout le stock →</a>
+        </div>
+        <div class="vehicle-grid" id="featuredGrid"></div>
+      </div>
+    </section>
+
+    <section class="section stock-section" id="stock">
+      <div class="container">
+        <div class="section-head stock-head">
+          <div><div class="eyebrow dark">Notre stock</div><h2>Trouvez votre prochain véhicule.</h2></div>
+          <div class="stock-count"><span id="vehicleCount">0</span> véhicule(s)</div>
+        </div>
+
+        <div class="filters-card">
+          <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Marque, modèle, finition…" /></label>
+          <select id="conditionFilter" aria-label="État"><option value="all">Neuf & occasion</option><option value="neuf">Neuf</option><option value="occasion">Occasion</option></select>
+          <select id="fuelFilter" aria-label="Motorisation"><option value="all">Toutes motorisations</option></select>
+          <select id="sortFilter" aria-label="Tri"><option value="recent">Plus récents</option><option value="price-asc">Prix croissant</option><option value="price-desc">Prix décroissant</option><option value="year-desc">Année récente</option></select>
+        </div>
+        <div class="vehicle-grid vehicle-grid-all" id="vehicleGrid"></div>
+        <div class="empty" id="emptyState" hidden>Aucun véhicule ne correspond à votre recherche.</div>
+      </div>
+    </section>
+
+    <section class="export-section" id="export">
+      <div class="container export-grid">
+        <div class="export-copy reveal">
+          <div class="eyebrow light">Export France → Algérie</div>
+          <h2>Une présentation claire avant même votre appel.</h2>
+          <p>Chaque fiche regroupe les informations essentielles : prix HT, année, kilométrage, motorisation, boîte, équipements principaux et photos.</p>
+          <a class="btn btn-light" href="#contact">Nous contacter →</a>
+        </div>
+        <div class="export-cards">
+          <article><span>01</span><h3>Stock détaillé</h3><p>Caractéristiques complètes et photos multiples.</p></article>
+          <article><span>02</span><h3>Prix HT</h3><p>Tarif visible clairement sur chaque véhicule.</p></article>
+          <article><span>03</span><h3>Équipe à Marseille</h3><p>Contact direct pour confirmer disponibilité et modalités.</p></article>
+          <article><span>04</span><h3>Orientation export</h3><p>Un showroom conçu pour les clients France–Algérie.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contact">
+      <div class="container contact-grid">
+        <div class="contact-copy">
+          <div class="eyebrow dark">Parlons de votre projet</div>
+          <h2>Vous cherchez un véhicule précis ?</h2>
+          <p>Envoyez votre demande et BY CARS vous recontacte avec les disponibilités.</p>
+          <div class="contact-lines">
+            <a href="tel:+33618175911"><span>Téléphone</span><b>06 18 17 59 11</b></a>
+            <a href="https://wa.me/33618175911" target="_blank" rel="noreferrer"><span>WhatsApp</span><b>Écrire maintenant</b></a>
+            <div><span>Localisation</span><b>Marseille, France</b></div>
+          </div>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <div class="field-row"><label>Nom<input name="name" required placeholder="Votre nom" /></label><label>Téléphone<input name="phone" required inputmode="tel" placeholder="06…" /></label></div>
+          <label>Email<input name="email" type="email" placeholder="vous@email.com" /></label>
+          <label>Votre recherche<textarea name="message" rows="5" required placeholder="Ex : Peugeot 3008, 2024 minimum, budget 25 000 € HT…"></textarea></label>
+          <button class="btn btn-primary full" type="submit">Envoyer ma demande →</button>
+          <p class="form-status" id="formStatus" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div><img src="assets/logo.svg" alt="BY CARS" class="footer-logo" /><p>Showroom automobile à Marseille, spécialisé dans la vente de véhicules neufs et d’occasion avec orientation export vers l’Algérie.</p></div>
+      <div><h4>Navigation</h4><a href="#stock">Véhicules</a><a href="#export">Export</a><a href="#contact">Contact</a></div>
+      <div><h4>Contact</h4><a href="tel:+33618175911">06 18 17 59 11</a><a href="https://wa.me/33618175911" target="_blank" rel="noreferrer">WhatsApp</a><span>Marseille, France</span></div>
+    </div>
+    <div class="container footer-bottom"><span>© <span id="year"></span> BY CARS</span><span>Marseille · France → Algérie</span></div>
+  </footer>
+
+  <div class="mobile-actions" aria-label="Actions rapides"><a href="tel:+33618175911">Appeler</a><a href="https://wa.me/33618175911" target="_blank" rel="noreferrer">WhatsApp</a></div>
+
+  <div class="modal" id="vehicleModal" aria-hidden="true">
+    <button class="modal-backdrop" data-close-modal aria-label="Fermer"></button>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" data-close-modal aria-label="Fermer">×</button>
+      <div class="modal-gallery">
+        <img id="modalImage" alt="Photo du véhicule" />
+        <button class="gallery-arrow left" id="galleryPrev" aria-label="Photo précédente">‹</button>
+        <button class="gallery-arrow right" id="galleryNext" aria-label="Photo suivante">›</button>
+        <div class="gallery-count" id="galleryCount"></div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-title-row"><div><div class="vehicle-state" id="modalCondition"></div><h2 id="modalTitle"></h2><p id="modalTrim"></p></div><div class="modal-price"><span>Prix HT</span><strong id="modalPrice"></strong></div></div>
+        <div class="spec-grid" id="modalSpecs"></div>
+        <div class="modal-description"><h3>Description</h3><p id="modalDescription"></p></div>
+        <div class="modal-cta"><a id="modalWhatsApp" class="btn btn-primary full" target="_blank" rel="noreferrer">Demander ce véhicule sur WhatsApp →</a><a class="btn btn-outline full" href="tel:+33618175911">Appeler BY CARS</a></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

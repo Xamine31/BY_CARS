@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#08162d" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>BY CARS — Gestion</title>
+  <link rel="icon" href="assets/favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin-page">
+  <div class="admin-auth-shell" id="setupScreen" hidden>
+    <div class="auth-card">
+      <img src="assets/logo.svg" alt="BY CARS" class="auth-logo" />
+      <span class="admin-kicker">Configuration requise</span>
+      <h1>Connectez Supabase.</h1>
+      <p>L’espace de gestion est prêt. Ajoutez simplement l’URL et la clé publique Supabase dans <code>config.js</code>.</p>
+      <div class="code-hint"><b>Fichier à modifier</b><span>config.js</span></div>
+      <p class="admin-note">N’utilisez jamais la clé <b>service_role</b> ici. La clé publique anon/publishable est prévue pour le navigateur avec les règles RLS du fichier SQL.</p>
+    </div>
+  </div>
+
+  <div class="admin-auth-shell" id="loginScreen" hidden>
+    <form class="auth-card" id="loginForm">
+      <img src="assets/logo.svg" alt="BY CARS" class="auth-logo" />
+      <span class="admin-kicker">Espace privé</span>
+      <h1>Connexion.</h1>
+      <p>Accès réservé à l’équipe BY CARS.</p>
+      <label>Email<input id="loginEmail" type="email" required autocomplete="email" placeholder="votre@email.com" /></label>
+      <label>Mot de passe<input id="loginPassword" type="password" required autocomplete="current-password" placeholder="••••••••" /></label>
+      <button class="btn btn-primary full" type="submit">Se connecter</button>
+      <p class="admin-status" id="loginStatus"></p>
+    </form>
+  </div>
+
+  <div class="admin-auth-shell" id="deniedScreen" hidden>
+    <div class="auth-card">
+      <img src="assets/logo.svg" alt="BY CARS" class="auth-logo" />
+      <span class="admin-kicker">Accès refusé</span>
+      <h1>Compte non autorisé.</h1>
+      <p>Ce compte existe dans Supabase Auth mais n’est pas déclaré dans la table <code>admins</code>.</p>
+      <button class="btn btn-outline full" id="deniedLogout">Se déconnecter</button>
+    </div>
+  </div>
+
+  <div class="admin-layout" id="dashboard" hidden>
+    <aside class="admin-sidebar">
+      <img src="assets/logo.svg" alt="BY CARS" class="admin-logo" />
+      <div class="admin-nav-label">Gestion du showroom</div>
+      <button class="admin-nav-item active" data-view="vehicles">Véhicules</button>
+      <button class="admin-nav-item" data-view="form">Ajouter un véhicule</button>
+      <div class="admin-sidebar-spacer"></div>
+      <a class="admin-public-link" href="index.html" target="_blank" rel="noreferrer">Voir le site public ↗</a>
+      <button class="admin-logout" id="logoutBtn">Se déconnecter</button>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div><span class="admin-kicker">BY CARS</span><h1 id="adminTitle">Véhicules</h1></div>
+        <button class="btn btn-primary" id="quickAdd">+ Ajouter</button>
+      </header>
+
+      <main class="admin-content">
+        <section id="vehiclesView">
+          <div class="admin-stats">
+            <div><span>Total</span><b id="statTotal">0</b></div>
+            <div><span>Publiés</span><b id="statPublished">0</b></div>
+            <div><span>Disponibles</span><b id="statAvailable">0</b></div>
+            <div><span>À la une</span><b id="statFeatured">0</b></div>
+          </div>
+          <div class="admin-card list-card">
+            <div class="list-head"><div><h2>Stock</h2><p>Gérez les véhicules affichés sur le site.</p></div><input id="adminSearch" type="search" placeholder="Rechercher…" /></div>
+            <div class="vehicle-admin-list" id="adminVehicleList"></div>
+            <div class="admin-empty" id="adminEmpty" hidden>Aucun véhicule enregistré.</div>
+          </div>
+        </section>
+
+        <section id="formView" hidden>
+          <form class="admin-card vehicle-form" id="vehicleForm">
+            <div class="form-title"><div><span class="admin-kicker" id="formKicker">Nouveau véhicule</span><h2 id="formTitle">Ajouter au stock</h2></div><button type="button" class="small-link" id="cancelEdit">Annuler</button></div>
+            <input type="hidden" id="vehicleId" />
+
+            <div class="form-section"><h3>Identification</h3><div class="admin-form-grid three">
+              <label>Marque *<input id="brand" required placeholder="Peugeot" /></label>
+              <label>Modèle *<input id="model" required placeholder="3008" /></label>
+              <label>Finition<input id="trim" placeholder="GT Hybrid 136" /></label>
+            </div></div>
+
+            <div class="form-section"><h3>Prix & état</h3><div class="admin-form-grid four">
+              <label>Prix HT (€) *<input id="price_ht" type="number" min="0" step="1" required placeholder="28900" /></label>
+              <label>État *<select id="condition" required><option value="occasion">Occasion</option><option value="neuf">Neuf</option></select></label>
+              <label>Année *<input id="yearInput" type="number" min="1990" max="2100" required /></label>
+              <label>Kilométrage<input id="mileage" type="number" min="0" step="1" value="0" /></label>
+            </div></div>
+
+            <div class="form-section"><h3>Caractéristiques</h3><div class="admin-form-grid three">
+              <label>Motorisation / carburant<input id="fuel" placeholder="Hybride essence" /></label>
+              <label>Boîte de vitesses<select id="transmission"><option value="Automatique">Automatique</option><option value="Manuelle">Manuelle</option><option value="">Autre / non précisé</option></select></label>
+              <label>Moteur<input id="engine" placeholder="1.2 Hybrid" /></label>
+              <label>Puissance (ch)<input id="power_hp" type="number" min="0" placeholder="136" /></label>
+              <label>Couleur<input id="color" placeholder="Gris" /></label>
+              <label>Portes<input id="doors" type="number" min="1" max="9" value="5" /></label>
+              <label>Places<input id="seats" type="number" min="1" max="20" value="5" /></label>
+            </div></div>
+
+            <div class="form-section"><h3>Description</h3><label>Description du véhicule<textarea id="description" rows="5" placeholder="État, équipements, informations importantes…"></textarea></label></div>
+
+            <div class="form-section"><h3>Photos</h3><div class="photo-upload-box"><input id="photos" type="file" accept="image/*" multiple /><b>Ajouter plusieurs photos</b><span>JPG, PNG, WEBP. Les photos seront affichées en galerie déroulante.</span></div><div id="existingPhotos" class="existing-photos"></div><label class="check-line" id="clearPhotosWrap" hidden><input id="clearPhotos" type="checkbox" /> Supprimer les anciennes photos lors de l’enregistrement</label></div>
+
+            <div class="form-section"><h3>Publication</h3><div class="toggle-grid">
+              <label class="toggle-line"><input id="available" type="checkbox" checked /><span><b>Disponible</b><small>Le véhicule peut être demandé.</small></span></label>
+              <label class="toggle-line"><input id="published" type="checkbox" checked /><span><b>Publié</b><small>Visible sur le site public.</small></span></label>
+              <label class="toggle-line"><input id="featured" type="checkbox" /><span><b>À la une</b><small>Affiché dans la sélection d’accueil.</small></span></label>
+            </div></div>
+
+            <div class="form-actions"><p class="admin-status" id="vehicleFormStatus"></p><button class="btn btn-primary" type="submit" id="saveVehicle">Enregistrer le véhicule</button></div>
+          </form>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
