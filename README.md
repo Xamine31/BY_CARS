@@ -4,9 +4,12 @@ Site moderne React + Vite + TypeScript, prévu pour un showroom basé à Marseil
 
 ## Fonctionnalités
 
-- Accueil premium aux couleurs BY CARS (bleu nuit + orange)
+- Design premium moderne aux couleurs BY CARS (bleu nuit + orange)
+- Version responsive optimisée téléphone / tablette / ordinateur
+- Navigation mobile en panneau coulissant
+- Aucun bouton administrateur visible sur le site public
 - Catalogue filtrable neuf / occasion / motorisation / prix
-- Fiche véhicule détaillée avec galerie photo déroulante
+- Fiche véhicule détaillée avec galerie photo déroulante et swipe tactile sur mobile
 - Prix HT, année, kilométrage, carburant, boîte, moteur, puissance, couleur, portes, places
 - Contact téléphone / WhatsApp / formulaire
 - Administration protégée par Supabase Auth
@@ -53,7 +56,7 @@ Le bucket `vehicle-images` est créé par le script SQL.
 npm run dev
 ```
 
-Puis ouvrir l’URL affichée par Vite. L’administration se trouve dans `#/admin`.
+Puis ouvrir l’URL affichée par Vite. Aucun lien admin n’est affiché publiquement. L’administration est accessible directement avec `#/admin` et reste protégée par Supabase Auth.
 
 ## 4. Déployer depuis GitHub
 
@@ -77,3 +80,14 @@ Puis dans **Settings > Pages**, choisir **GitHub Actions** comme source. Chaque 
 ## Remarque
 
 Sans variables Supabase, le site public affiche un petit stock de démonstration pour prévisualiser le design. L’administration indique comment connecter Supabase.
+
+
+## Lien administrateur sur GitHub Pages
+
+Le lien n’apparaît nulle part dans la navigation publique. Utilisez directement :
+
+```text
+https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/#/admin
+```
+
+Conservez ce lien dans vos favoris. L’accès reste sécurisé par la connexion Supabase et la table `admins`.

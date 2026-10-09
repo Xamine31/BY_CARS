@@ -1,4 +1,4 @@
-import { ArrowLeft, CalendarDays, Car, Fuel, Gauge, Palette, Settings2, UsersRound } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Car, Fuel, Gauge, MessageCircle, Palette, Phone, Settings2, UsersRound } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PhotoCarousel from '../components/PhotoCarousel'
@@ -50,5 +50,9 @@ export default function VehicleDetail() {
       <div><span className="eyebrow orange">Caractéristiques</span><h2>Fiche technique</h2><div className="spec-grid">{specs.map(([Icon, label, value]) => <div className="spec" key={label}><Icon/><span>{label}</span><strong>{value}</strong></div>)}</div></div>
       <div className="description-card"><span className="eyebrow orange">Présentation</span><h2>À propos du véhicule</h2><p>{vehicle.description || 'Contactez BY CARS pour obtenir plus de détails sur ce véhicule.'}</p>{vehicle.power_hp && <p><strong>Puissance :</strong> {vehicle.power_hp} ch</p>}</div>
     </section>
+    <div className="mobile-contact-bar">
+      <a href="tel:+33618175911" className="mobile-contact-call"><Phone size={19}/><span>Appeler</span></a>
+      <a href={`https://wa.me/33618175911?text=${encodeURIComponent(`Bonjour BY CARS, je souhaite des informations sur ${vehicle.brand} ${vehicle.model} ${vehicle.year}.`)}`} className="mobile-contact-whatsapp" target="_blank" rel="noreferrer"><MessageCircle size={19}/><span>WhatsApp</span></a>
+    </div>
   </main>
 }
