@@ -1,27 +1,24 @@
-BY CARS — VERSION GITHUB PAGES SANS BUILD
-=========================================
+BY CARS — VERSION MULTIPAGE MODERNE
+===================================
 
-Cette version n'utilise PAS npm, PAS Vite et PAS Node.js.
-Donc il n'y a plus de "npm run build" susceptible de casser.
+1. Décompresse le ZIP.
+2. Dans ton dépôt GitHub, remplace les anciens fichiers par TOUT le contenu du ZIP.
+3. Vérifie que .github/workflows/deploy.yml est bien présent.
+4. Fais Commit changes.
+5. GitHub > Settings > Pages > Source : GitHub Actions.
+6. Attends que l'onglet Actions passe en vert.
 
-1) Décompresse le ZIP.
-2) Sur GitHub, remplace les anciens fichiers par TOUT le contenu de ce dossier.
-3) Vérifie que .github/workflows/deploy.yml est bien présent.
-4) GitHub > Settings > Pages > Source : GitHub Actions.
-5) Fais un commit sur la branche main.
+PAGES :
+- index.html = accueil
+- stock.html = recherche et catalogue
+- vehicule.html?id=ID = une fiche dédiée par voiture
+- export.html = export Algérie
+- contact.html = contact
+- admin.html = administration privée (aucun bouton admin sur le site public)
 
-Le site public fonctionne immédiatement en mode démonstration.
+SUPABASE :
+- configure config.js avec ton URL Supabase + clé publique anon/publishable
+- exécute supabase/schema.sql dans SQL Editor
 
-ADMIN :
-https://TON-COMPTE.github.io/TON-DEPOT/admin.html
-Aucun lien vers cette page n'est affiché sur le site public.
-
-POUR SUPABASE :
-- Exécute supabase/schema.sql dans Supabase > SQL Editor.
-- Crée ton utilisateur dans Authentication > Users.
-- Ajoute son UUID dans public.admins (exemple à la fin de schema.sql).
-- Dans config.js, renseigne supabaseUrl et supabaseAnonKey.
-- Commit config.js.
-
-IMPORTANT : la clé anon/publishable peut être utilisée côté navigateur avec RLS.
-NE JAMAIS mettre la clé service_role dans config.js.
+IMPORTANT :
+Cette version n'utilise ni npm, ni Vite, ni build. Elle est faite pour GitHub Pages directement.

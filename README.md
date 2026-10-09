@@ -1,46 +1,46 @@
-# BY CARS — GitHub Pages + Supabase
+# BY CARS — version multipage moderne, sans build
 
-Version statique et mobile-first du showroom BY CARS. Elle est conçue pour fonctionner directement sur GitHub Pages **sans npm, sans Node, sans Vite et sans étape de build**.
+Cette version est conçue pour être déposée directement sur GitHub Pages.
 
-## Mise en ligne
+## Pages publiques
 
-1. Décompresse le ZIP.
-2. Envoie **tout le contenu** à la racine de ton dépôt GitHub.
-3. Dans `Settings > Pages`, choisis **GitHub Actions** comme source.
-4. Fais un commit sur `main`.
+- `index.html` — accueil
+- `stock.html` — catalogue + recherche + filtres
+- `vehicule.html?id=...` — fiche individuelle de chaque véhicule
+- `export.html` — page dédiée export France → Algérie
+- `contact.html` — formulaire de contact
 
-Le workflow `.github/workflows/deploy.yml` publie directement les fichiers statiques. Il n'exécute aucune commande `npm`.
+L'administration est volontairement absente de la navigation publique.
+Accès privé : `admin.html`
 
-## Adresse admin
+## Aucun build
 
-Il n'y a aucun bouton Administration sur le site public. L'accès direct est :
+Il n'y a pas de Vite, npm, Node ou TypeScript à lancer. GitHub Pages publie directement les fichiers.
 
-`https://TON-COMPTE.github.io/TON-DEPOT/admin.html`
-
-L'adresse n'est pas une sécurité à elle seule : l'accès réel est protégé par Supabase Auth + RLS.
+Le workflow est déjà inclus : `.github/workflows/deploy.yml`.
 
 ## Connexion Supabase
 
-Exécute `supabase/schema.sql` dans le SQL Editor de Supabase. Ensuite crée ton utilisateur dans `Authentication > Users`, copie son UUID et ajoute-le dans la table `public.admins` avec l'exemple fourni à la fin du script SQL.
-
-Dans `config.js`, renseigne :
+1. Ouvrez `supabase/schema.sql` dans Supabase > SQL Editor et exécutez le script.
+2. Créez votre utilisateur dans Authentication > Users.
+3. Ajoutez cet utilisateur dans la table `admins` comme indiqué en bas du fichier SQL.
+4. Ouvrez `config.js` et renseignez :
 
 ```js
 window.BY_CARS_CONFIG = {
-  supabaseUrl: 'https://TON-PROJET.supabase.co',
-  supabaseAnonKey: 'TA_CLE_PUBLIQUE',
+  supabaseUrl: 'https://VOTRE-PROJET.supabase.co',
+  supabaseAnonKey: 'VOTRE_CLE_PUBLIQUE',
   phoneDisplay: '06 18 17 59 11',
   phoneIntl: '33618175911',
   city: 'Marseille, France'
 }
 ```
 
-Utilise uniquement la clé **anon / publishable**. Ne mets jamais une clé `service_role` dans le site.
+Utilisez uniquement la clé publique `anon` / `publishable`. Ne mettez jamais une clé `service_role` dans un site public.
 
-## Fonctions admin
+## Mise en ligne GitHub
 
-L'espace privé permet d'ajouter, modifier et supprimer des véhicules, de saisir marque, modèle, finition, prix HT, neuf/occasion, année, kilométrage, carburant/motorisation, boîte, moteur, puissance, couleur, portes, places, description, disponibilité, publication et mise à la une. Plusieurs photos peuvent être envoyées en une fois dans Supabase Storage.
+Décompressez le ZIP puis copiez tout son contenu à la racine du dépôt GitHub.
+Dans Settings > Pages, sélectionnez GitHub Actions.
 
-## Mobile
-
-Le site est responsive, avec menu mobile, cartes une colonne, filtres adaptés, barre Appeler/WhatsApp fixe et galerie photo balayable au doigt.
+Le site fonctionne en mode démonstration tant que Supabase n'est pas configuré.
