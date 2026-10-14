@@ -1,29 +1,24 @@
-BY CARS — VERSION MODERNE MAGHREB / GITHUB SANS BUILD
-======================================================
+BY CARS — VERSION MULTIPAGE MODERNE
+===================================
 
-MISE EN LIGNE
 1. Décompresse le ZIP.
-2. Remplace les anciens fichiers de ton dépôt GitHub par TOUT le contenu du ZIP.
-3. Vérifie que .github/workflows/deploy.yml est présent.
+2. Dans ton dépôt GitHub, remplace les anciens fichiers par TOUT le contenu du ZIP.
+3. Vérifie que .github/workflows/deploy.yml est bien présent.
 4. Fais Commit changes.
 5. GitHub > Settings > Pages > Source : GitHub Actions.
-6. Attends que Actions passe en vert.
+6. Attends que l'onglet Actions passe en vert.
 
-PAGES
-- index.html : accueil
-- stock.html : catalogue + barre de recherche + filtres
-- vehicule.html?id=ID : fiche dédiée de chaque voiture
-- export.html : export vers l’Algérie, le Maroc et la Tunisie
-- contact.html : contact
-- admin.html : administration (aucun bouton admin visible sur le site)
+PAGES :
+- index.html = accueil
+- stock.html = recherche et catalogue
+- vehicule.html?id=ID = une fiche dédiée par voiture
+- export.html = export Algérie
+- contact.html = contact
+- admin.html = administration privée (aucun bouton admin sur le site public)
 
-ADMIN SANS BASE
-Tu peux déjà ouvrir admin.html même sans Supabase.
-Le site passe en MODE DEMO LOCAL : tu peux ajouter/modifier des véhicules et les voir sur le site dans le même navigateur.
+SUPABASE :
+- configure config.js avec ton URL Supabase + clé publique anon/publishable
+- exécute supabase/schema.sql dans SQL Editor
 
-Quand Supabase sera connecté dans config.js, l'admin utilisera automatiquement la connexion sécurisée Supabase.
-
-IMPORTANT
-Aucun npm, aucun Vite, aucun build. GitHub Pages publie directement les fichiers.
-
-MISE À JOUR : export affiché uniquement vers Algérie, Maroc et Tunisie. Les 6 véhicules de démonstration utilisent 2 vraies photos de leur modèle via Wikimedia Commons.
+IMPORTANT :
+Cette version n'utilise ni npm, ni Vite, ni build. Elle est faite pour GitHub Pages directement.
