@@ -11,7 +11,7 @@ Version conçue pour être copiée directement dans un dépôt GitHub Pages : au
 - `contact.html` — formulaire / WhatsApp
 - `admin.html` — gestion des véhicules, volontairement absente de la navigation publique
 
-Le vrai logo BY CARS fourni est intégré dans `assets/logo-bycars.jpg`.
+Le vrai logo BY CARS fourni est intégré dans `assets/logo-bycars-clean.png`.
 
 ## Administration avant Supabase
 
