@@ -2,6 +2,7 @@ import { getSupabase, isSupabaseConfigured } from './supabase-client.js'
 import { demoVehicles } from './data.js'
 
 export const cfg = window.BY_CARS_CONFIG || {}
+export const DEMO_STORAGE_KEY = 'bycars_demo_vehicles_v3'
 export const $ = (selector, root=document) => root.querySelector(selector)
 export const $$ = (selector, root=document) => [...root.querySelectorAll(selector)]
 export const esc = value => String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))
@@ -9,8 +10,20 @@ export const fmtPrice = value => new Intl.NumberFormat('fr-FR',{style:'currency'
 export const fmtKm = value => `${new Intl.NumberFormat('fr-FR').format(Number(value || 0))} km`
 export const safePhotos = vehicle => Array.isArray(vehicle?.photos) && vehicle.photos.filter(Boolean).length ? vehicle.photos.filter(Boolean) : ['assets/car-placeholder-1.svg']
 
+export function loadDemoVehicles(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY) || 'null')
+    if(Array.isArray(saved) && saved.length) return saved
+  }catch(error){ console.warn('Stock démo illisible, restauration du stock exemple.', error) }
+  return typeof structuredClone === 'function' ? structuredClone(demoVehicles) : JSON.parse(JSON.stringify(demoVehicles))
+}
+
+export function saveDemoVehicles(vehicles){
+  localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(vehicles))
+}
+
 export async function loadVehicles(){
-  if(!isSupabaseConfigured()) return [...demoVehicles]
+  if(!isSupabaseConfigured()) return loadDemoVehicles().filter(v=>v.published!==false)
   try{
     const supabase = await getSupabase()
     const { data, error } = await supabase.from('vehicles').select('*').eq('published',true).order('created_at',{ascending:false})
@@ -18,13 +31,13 @@ export async function loadVehicles(){
     return Array.isArray(data) ? data : []
   }catch(error){
     console.error('BY CARS : impossible de charger Supabase, affichage du stock de démonstration.', error)
-    return [...demoVehicles]
+    return loadDemoVehicles().filter(v=>v.published!==false)
   }
 }
 
 export async function loadVehicle(id){
   if(!id) return null
-  if(!isSupabaseConfigured()) return demoVehicles.find(v=>String(v.id)===String(id)) || null
+  if(!isSupabaseConfigured()) return loadDemoVehicles().find(v=>String(v.id)===String(id) && v.published!==false) || null
   try{
     const supabase = await getSupabase()
     const { data, error } = await supabase.from('vehicles').select('*').eq('id',id).eq('published',true).maybeSingle()
@@ -32,7 +45,7 @@ export async function loadVehicle(id){
     return data || null
   }catch(error){
     console.error('BY CARS : impossible de charger la fiche Supabase.', error)
-    return demoVehicles.find(v=>String(v.id)===String(id)) || null
+    return loadDemoVehicles().find(v=>String(v.id)===String(id) && v.published!==false) || null
   }
 }
 
@@ -99,7 +112,7 @@ function initGlobal(){
   $$('.js-phone-display').forEach(el=>el.textContent=cfg.phoneDisplay || '06 18 17 59 11')
   $$('.js-phone-link').forEach(el=>el.href=`tel:+${cfg.phoneIntl || '33618175911'}`)
   $$('.js-whatsapp-link').forEach(el=>{
-    if(!el.href || el.getAttribute('href')==='#') el.href=whatsappLink('Bonjour BY CARS, je souhaite avoir des informations sur vos véhicules et votre service export vers l’Algérie.')
+    if(!el.href || el.getAttribute('href')==='#') el.href=whatsappLink('Bonjour BY CARS, je souhaite avoir des informations sur vos véhicules et votre service d’export vers l’Algérie, le Maroc et la Tunisie.')
   })
   initNavigation()
 }

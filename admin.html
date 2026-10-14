@@ -13,10 +13,10 @@
 <body class="admin-page">
   <div class="admin-auth-shell" id="setupScreen" hidden>
     <div class="auth-card">
-      <img src="assets/logo.svg" alt="BY CARS" class="auth-logo" />
-      <span class="admin-kicker">Configuration requise</span>
-      <h1>Connectez Supabase.</h1>
-      <p>L’espace de gestion est prêt. Ajoutez simplement l’URL et la clé publique Supabase dans <code>config.js</code>.</p>
+      <img src="assets/logo-bycars.jpg" alt="BY CARS" class="auth-logo" />
+      <span class="admin-kicker">Connexion indisponible</span>
+      <h1>Vérifiez Supabase.</h1>
+      <p>La configuration semble renseignée mais la connexion n’a pas pu être initialisée. Vérifiez les valeurs de <code>config.js</code>.</p>
       <div class="code-hint"><b>Fichier à modifier</b><span>config.js</span></div>
       <p class="admin-note">N’utilisez jamais la clé <b>service_role</b> ici. La clé publique anon/publishable est prévue pour le navigateur avec les règles RLS du fichier SQL.</p>
     </div>
@@ -24,7 +24,7 @@
 
   <div class="admin-auth-shell" id="loginScreen" hidden>
     <form class="auth-card" id="loginForm">
-      <img src="assets/logo.svg" alt="BY CARS" class="auth-logo" />
+      <img src="assets/logo-bycars.jpg" alt="BY CARS" class="auth-logo" />
       <span class="admin-kicker">Espace privé</span>
       <h1>Connexion.</h1>
       <p>Accès réservé à l’équipe BY CARS.</p>
@@ -37,7 +37,7 @@
 
   <div class="admin-auth-shell" id="deniedScreen" hidden>
     <div class="auth-card">
-      <img src="assets/logo.svg" alt="BY CARS" class="auth-logo" />
+      <img src="assets/logo-bycars.jpg" alt="BY CARS" class="auth-logo" />
       <span class="admin-kicker">Accès refusé</span>
       <h1>Compte non autorisé.</h1>
       <p>Ce compte existe dans Supabase Auth mais n’est pas déclaré dans la table <code>admins</code>.</p>
@@ -47,7 +47,7 @@
 
   <div class="admin-layout" id="dashboard" hidden>
     <aside class="admin-sidebar">
-      <img src="assets/logo.svg" alt="BY CARS" class="admin-logo" />
+      <img src="assets/logo-bycars.jpg" alt="BY CARS" class="admin-logo" />
       <div class="admin-nav-label">Gestion du showroom</div>
       <button class="admin-nav-item active" data-view="vehicles">Véhicules</button>
       <button class="admin-nav-item" data-view="form">Ajouter un véhicule</button>
@@ -63,6 +63,7 @@
       </header>
 
       <main class="admin-content">
+        <div class="demo-banner" id="demoModeBanner" hidden><div><b>Mode démonstration local</b><span>Supabase n’est pas encore connecté. Vous pouvez tester l’espace admin : les véhicules ajoutés seront visibles sur le site dans ce navigateur.</span></div><button id="resetDemo" type="button">Réinitialiser la démo</button></div>
         <section id="vehiclesView">
           <div class="admin-stats">
             <div><span>Total</span><b id="statTotal">0</b></div>

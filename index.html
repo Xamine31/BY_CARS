@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#071323" />
-  <meta name="description" content="BY CARS Marseille — showroom automobile et accompagnement export de véhicules de France vers l'Algérie." />
+  <meta name="theme-color" content="#0a0b0d" />
+  <meta name="description" content="BY CARS Marseille — showroom automobile, véhicules neufs et d’occasion, export vers l’Algérie, le Maroc et la Tunisie." />
   <title>BY CARS — Showroom automobile Marseille</title>
   <link rel="icon" href="assets/favicon.svg" />
   <link rel="stylesheet" href="styles.css" />
@@ -12,14 +12,19 @@
 <body>
   <header class="site-header">
     <div class="container nav">
-      <a class="brand" href="index.html"><img src="assets/logo.svg" alt="BY CARS" /></a>
+      <a class="brand" href="index.html"><img src="assets/logo-bycars.jpg" alt="BY CARS" /></a>
       <nav class="desktop-nav" aria-label="Navigation principale">
-        <a data-nav href="index.html">Accueil</a><a data-nav href="stock.html">Nos véhicules</a><a data-nav href="export.html">Export Algérie</a><a data-nav href="contact.html">Contact</a>
+        <a data-nav href="index.html">Accueil</a>
+        <a data-nav href="stock.html">Véhicules</a>
+        <a data-nav href="export.html">Export Maghreb</a>
+        <a data-nav href="contact.html">Contact</a>
       </nav>
-      <div class="nav-cta"><a class="nav-call js-phone-link" href="tel:+33618175911"><span>Appeler</span><b class="js-phone-display">06 18 17 59 11</b></a></div>
+      <div class="nav-cta"><a class="nav-call js-phone-link" href="tel:+33618175911"><span>Contact direct</span><b class="js-phone-display">06 18 17 59 11</b></a></div>
       <button id="menuToggle" class="menu-toggle" aria-expanded="false" aria-label="Ouvrir le menu"><span></span><span></span></button>
     </div>
-    <nav id="mobileNav" class="mobile-nav" aria-hidden="true"><a data-nav href="index.html">Accueil</a><a data-nav href="stock.html">Nos véhicules</a><a data-nav href="export.html">Export Algérie</a><a data-nav href="contact.html">Contact</a><a class="mobile-contact js-phone-link" href="tel:+33618175911">Appeler BY CARS</a></nav>
+    <nav id="mobileNav" class="mobile-nav" aria-hidden="true">
+      <a data-nav href="index.html">Accueil</a><a data-nav href="stock.html">Véhicules</a><a data-nav href="export.html">Export Maghreb</a><a data-nav href="contact.html">Contact</a><a class="mobile-contact js-phone-link" href="tel:+33618175911">Appeler BY CARS</a>
+    </nav>
   </header>
 
   <main>
@@ -27,51 +32,69 @@
       <div class="container hero-inner">
         <div class="hero-copy">
           <span class="eyebrow">Showroom automobile · Marseille</span>
-          <h1>Votre voiture.<br><em>Notre route.</em></h1>
-          <p>Véhicules neufs et d’occasion sélectionnés à Marseille, avec accompagnement dédié pour vos projets d’export vers l’Algérie.</p>
+          <h1>Le bon véhicule.<br><em>Sans détour.</em></h1>
+          <p>Véhicules neufs et d’occasion sélectionnés à Marseille. BY CARS vous accompagne aussi pour vos projets d’export automobile vers l’Algérie, le Maroc et la Tunisie.</p>
           <form class="hero-search" id="heroSearch">
-            <input id="heroSearchInput" type="search" placeholder="Rechercher une marque, un modèle…" aria-label="Rechercher un véhicule" />
-            <button class="btn btn-primary" type="submit">Rechercher dans le stock</button>
+            <input id="heroSearchInput" type="search" placeholder="Rechercher une marque, un modèle, une finition…" aria-label="Rechercher un véhicule" />
+            <button class="btn btn-primary" type="submit">Rechercher</button>
           </form>
-          <div class="hero-meta"><span><i></i> Prix affichés HT</span><span><i></i> Stock mis à jour</span><span><i></i> Marseille → Algérie</span></div>
+          <div class="hero-meta"><span><i></i> Prix affichés HT</span><span><i></i> Neuf & occasion</span><span><i></i> Marseille → Algérie · Maroc · Tunisie</span></div>
         </div>
         <aside class="hero-side">
-          <div class="hero-glass"><small>Stock actuellement visible</small><div class="hero-stat"><strong id="homeStockCount">—</strong><span>véhicules</span></div><p>Consultez les fiches détaillées, les photos et les caractéristiques de chaque véhicule.</p></div>
+          <div class="hero-glass">
+            <small>Stock disponible</small>
+            <div class="hero-stat"><strong id="homeStockCount">—</strong><span>véhicules</span></div>
+            <p>Consultez les fiches détaillées, les photos et toutes les caractéristiques avant de nous contacter.</p>
+            <div class="hero-mini-links"><a href="stock.html">Voir le stock ↗</a><a href="export.html">Export Algérie · Maroc · Tunisie ↗</a></div>
+          </div>
         </aside>
       </div>
     </section>
 
     <section class="trust-strip"><div class="container trust-grid">
       <div class="trust-item"><div class="trust-icon">01</div><div><b>Stock sélectionné</b><span>Neuf & occasion</span></div></div>
-      <div class="trust-item"><div class="trust-icon">02</div><div><b>Prix HT clairs</b><span>Lecture rapide</span></div></div>
-      <div class="trust-item"><div class="trust-icon">03</div><div><b>Photos détaillées</b><span>Galeries véhicule</span></div></div>
-      <div class="trust-item"><div class="trust-icon">04</div><div><b>Export accompagné</b><span>France → Algérie</span></div></div>
+      <div class="trust-item"><div class="trust-icon">02</div><div><b>Prix HT lisibles</b><span>Informations claires</span></div></div>
+      <div class="trust-item"><div class="trust-icon">03</div><div><b>Fiches détaillées</b><span>Photos & caractéristiques</span></div></div>
+      <div class="trust-item"><div class="trust-icon">04</div><div><b>Export Maghreb</b><span>Depuis Marseille</span></div></div>
     </div></section>
+
+    <section class="section section-soft">
+      <div class="container">
+        <div class="section-head"><div><span class="eyebrow">Explorez le showroom</span><h2>Trouvez votre prochaine voiture.</h2></div><p>Un catalogue pensé comme un vrai showroom digital : recherche rapide, fiches individuelles et contact direct.</p></div>
+        <div class="category-row">
+          <a class="category-chip" href="stock.html"><span>Tout le stock</span><b>Voir les véhicules →</b></a>
+          <a class="category-chip" href="stock.html?q=hybride"><span>Motorisation</span><b>Hybrides</b></a>
+          <a class="category-chip" href="stock.html?q=automatique"><span>Transmission</span><b>Automatiques</b></a>
+          <a class="category-chip" href="stock.html?q=2026"><span>Arrivages</span><b>Modèles récents</b></a>
+          <a class="category-chip" href="contact.html"><span>Sur demande</span><b>Recherche personnalisée</b></a>
+        </div>
+      </div>
+    </section>
 
     <section class="section">
       <div class="container">
-        <div class="section-head"><div><span class="eyebrow">Notre sélection</span><h2>À la une.</h2></div><p>Une sélection de véhicules disponibles au showroom. Ouvrez une fiche pour voir toutes les caractéristiques et les photos.</p></div>
+        <div class="section-head"><div><span class="eyebrow">Derniers arrivages</span><h2>À la une.</h2></div><p>Une sélection des véhicules actuellement mis en avant. Chaque annonce dispose de sa propre page avec galerie photo et caractéristiques.</p></div>
         <div class="vehicle-grid" id="featuredGrid"></div>
-        <div class="view-all-row"><a class="btn btn-dark" href="stock.html">Voir tous les véhicules →</a></div>
+        <div class="view-all-row"><a class="btn btn-outline" href="stock.html">Voir tout le stock →</a></div>
       </div>
     </section>
 
     <section class="section section-dark">
       <div class="container">
-        <div class="section-head"><div><span class="eyebrow">Export Algérie</span><h2>Un parcours simple.</h2></div><p>BY CARS vous accompagne depuis la sélection du véhicule jusqu’aux étapes liées à votre projet d’export.</p></div>
+        <div class="section-head"><div><span class="eyebrow">Export vers l’Algérie, le Maroc et la Tunisie</span><h2>Depuis Marseille, vers votre destination.</h2></div><p>BY CARS vous accompagne dans votre projet d’achat et d’export automobile vers l’Algérie, le Maroc et la Tunisie, avec un contact direct à chaque étape.</p></div>
         <div class="process-grid">
-          <article class="process-card"><span>01</span><h3>Choix du véhicule</h3><p>Vous sélectionnez votre voiture dans notre stock ou nous échangeons sur votre recherche.</p></article>
-          <article class="process-card"><span>02</span><h3>Validation</h3><p>Nous confirmons les caractéristiques, le prix HT et la disponibilité du véhicule.</p></article>
-          <article class="process-card"><span>03</span><h3>Préparation</h3><p>Nous vous guidons sur les éléments nécessaires à votre dossier et à la préparation du véhicule.</p></article>
-          <article class="process-card"><span>04</span><h3>Départ</h3><p>Votre projet se poursuit vers l’Algérie avec les informations et documents convenus.</p></article>
+          <article class="process-card"><span>01</span><h3>Choix du véhicule</h3><p>Sélectionnez un véhicule en stock ou transmettez-nous votre recherche.</p></article>
+          <article class="process-card"><span>02</span><h3>Validation</h3><p>Nous confirmons les caractéristiques, le prix HT et la disponibilité.</p></article>
+          <article class="process-card"><span>03</span><h3>Préparation</h3><p>Nous vous accompagnons sur les éléments nécessaires selon votre projet et votre destination.</p></article>
+          <article class="process-card"><span>04</span><h3>Organisation</h3><p>Nous avançons avec vous sur les prochaines étapes prévues pour le véhicule.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="section"><div class="container"><div class="split-cta"><div><span class="eyebrow">Un véhicule en tête ?</span><h2>Parlons de votre projet.</h2><p>Contactez BY CARS pour vérifier une disponibilité ou poser vos questions sur l’export.</p></div><div class="split-cta-actions"><a class="btn btn-ghost-light js-whatsapp-link" href="#" target="_blank" rel="noopener">WhatsApp</a><a class="btn btn-primary" href="contact.html">Nous contacter</a></div></div></div></section>
+    <section class="section"><div class="container"><div class="split-cta"><div><span class="eyebrow">Vous avez un modèle en tête ?</span><h2>Parlons de votre projet.</h2><p>Une voiture précise, un budget ou une destination en Algérie, au Maroc ou en Tunisie ? Contactez directement BY CARS.</p></div><div class="split-cta-actions"><a class="btn btn-ghost-light js-whatsapp-link" href="#" target="_blank" rel="noopener">WhatsApp</a><a class="btn btn-primary" href="contact.html">Nous contacter</a></div></div></div></section>
   </main>
 
-  <footer class="footer"><div class="container"><div class="footer-grid"><div><img class="footer-logo" src="assets/logo.svg" alt="BY CARS" /><p>Showroom automobile basé à Marseille, spécialisé dans la vente de véhicules et l’accompagnement export de la France vers l’Algérie.</p></div><div><h4>Navigation</h4><a href="stock.html">Nos véhicules</a><a href="export.html">Export Algérie</a><a href="contact.html">Contact</a></div><div><h4>Contact</h4><a class="js-phone-link" href="tel:+33618175911"><span class="js-phone-display">06 18 17 59 11</span></a><span>Marseille, France</span></div></div><div class="footer-bottom"><span>© <span class="js-year"></span> BY CARS.</span><span>Marseille · France → Algérie</span></div></div></footer>
+  <footer class="footer"><div class="container"><div class="footer-grid"><div><img class="footer-logo" src="assets/logo-bycars.jpg" alt="BY CARS" /><p>Showroom automobile basé à Marseille, spécialisé dans la vente de véhicules neufs et d’occasion et l’accompagnement export vers l’Algérie, le Maroc et la Tunisie.</p></div><div><h4>Navigation</h4><a href="stock.html">Véhicules</a><a href="export.html">Export Maghreb</a><a href="contact.html">Contact</a></div><div><h4>Contact</h4><a class="js-phone-link" href="tel:+33618175911"><span class="js-phone-display">06 18 17 59 11</span></a><span>Marseille, France</span></div></div><div class="footer-bottom"><span>© <span class="js-year"></span> BY CARS.</span><span>Marseille · France → Algérie · Maroc · Tunisie</span><a href="credits-photos.html" style="font-size:.8rem;opacity:.65">Crédits photos</a></div></div></footer>
   <script src="config.js"></script><script type="module" src="common.js"></script><script type="module" src="home.js"></script>
 </body>
 </html>
