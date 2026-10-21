@@ -12,3 +12,7 @@ BY CARS — MISE EN LIGNE
 10) Admin : https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/admin.html
 
 Ne jamais mettre de clé Supabase secret/service_role dans le site.
+
+SI LA BASE EXISTE DEJA : executez supabase/migration-prix-sur-devis.sql une fois.
+Le formulaire Contact ouvre WhatsApp avec le numero phoneIntl de config.js.
+Prix vide dans l'admin = Sur devis.

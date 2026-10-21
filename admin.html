@@ -87,7 +87,7 @@
             </div></div>
 
             <div class="form-section"><h3>Prix & état</h3><div class="admin-form-grid four">
-              <label>Prix HT (€) *<input id="price_ht" type="number" min="0" step="1" required placeholder="28900" /></label>
+              <label>Prix HT (€)<input id="price_ht" type="number" min="0" step="1" placeholder="Laisser vide = Sur devis" /><small class="field-help">Laissez ce champ vide pour afficher « Sur devis ».</small></label>
               <label>État *<select id="condition" required><option value="occasion">Occasion</option><option value="neuf">Neuf</option></select></label>
               <label>Année *<input id="yearInput" type="number" min="1990" max="2100" required /></label>
               <label>Kilométrage<input id="mileage" type="number" min="0" step="1" value="0" /></label>
@@ -105,7 +105,7 @@
 
             <div class="form-section"><h3>Description</h3><label>Description du véhicule<textarea id="description" rows="5" placeholder="État, équipements, informations importantes…"></textarea></label></div>
 
-            <div class="form-section"><h3>Photos</h3><div class="photo-upload-box"><input id="photos" type="file" accept="image/*" multiple /><b>Ajouter plusieurs photos</b><span>JPG, PNG, WEBP. Les photos seront affichées en galerie déroulante.</span></div><div id="existingPhotos" class="existing-photos"></div><label class="check-line" id="clearPhotosWrap" hidden><input id="clearPhotos" type="checkbox" /> Supprimer les anciennes photos lors de l’enregistrement</label></div>
+            <div class="form-section"><h3>Photos</h3><div class="photo-upload-box"><input id="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple /><b>Ajouter plusieurs photos</b><span>JPG, PNG ou WEBP. Vous pouvez vérifier les images avant l’enregistrement.</span></div><div id="selectedPhotosBlock" class="selected-photos-block" hidden><div class="photo-preview-head"><b>Nouvelles photos</b><span id="selectedPhotosCount"></span></div><div id="selectedPhotosPreview" class="selected-photos-preview"></div></div><div id="existingPhotosBlock" class="existing-photos-block" hidden><div class="photo-preview-head"><b>Photos déjà enregistrées</b></div><div id="existingPhotos" class="existing-photos"></div></div><label class="check-line" id="clearPhotosWrap" hidden><input id="clearPhotos" type="checkbox" /> Supprimer les anciennes photos lors de l’enregistrement</label></div>
 
             <div class="form-section"><h3>Publication</h3><div class="toggle-grid">
               <label class="toggle-line"><input id="available" type="checkbox" checked /><span><b>Disponible</b><small>Le véhicule peut être demandé.</small></span></label>

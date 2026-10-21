@@ -4,7 +4,7 @@ export const cfg = window.BY_CARS_CONFIG || {}
 export const $ = (selector, root=document) => root.querySelector(selector)
 export const $$ = (selector, root=document) => [...root.querySelectorAll(selector)]
 export const esc = value => String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))
-export const fmtPrice = value => new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(value || 0))
+export const fmtPrice = value => (value === null || value === undefined || value === '') ? 'Sur devis' : new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(value))
 export const fmtKm = value => `${new Intl.NumberFormat('fr-FR').format(Number(value || 0))} km`
 export const safePhotos = vehicle => Array.isArray(vehicle?.photos) && vehicle.photos.filter(Boolean).length ? vehicle.photos.filter(Boolean) : ['assets/car-placeholder-1.svg']
 
@@ -67,7 +67,7 @@ export function vehicleCard(vehicle){
         <span>${esc(vehicle.fuel || '—')}</span><span>${esc(vehicle.transmission || '—')}</span><span>${fmtKm(vehicle.mileage)}</span>
       </div>
       <div class="car-footer">
-        <div><small>Prix HT</small><strong>${fmtPrice(vehicle.price_ht)}</strong></div>
+        <div><small>${vehicle.price_ht == null ? 'Tarif' : 'Prix HT'}</small><strong>${fmtPrice(vehicle.price_ht)}</strong></div>
         <a class="arrow-link" href="${vehicleUrl(vehicle)}" aria-label="Ouvrir la fiche">↗</a>
       </div>
     </div>

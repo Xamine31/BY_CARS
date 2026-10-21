@@ -17,6 +17,7 @@ if(!vehicle){
   $('#vehicleTitle').textContent = title
   $('#vehicleTrim').textContent = vehicle.trim || 'Finition à préciser'
   $('#vehiclePrice').textContent = fmtPrice(vehicle.price_ht)
+  $('#vehiclePriceLabel').textContent = vehicle.price_ht == null ? 'Tarif' : 'Prix de vente HT'
   $('#vehicleDescription').textContent = vehicle.description || 'Contactez BY CARS pour obtenir toutes les informations sur ce véhicule.'
 
   const specs = [
@@ -45,7 +46,8 @@ if(!vehicle){
   mainImage.addEventListener('touchend',e=>{const dx=(e.changedTouches[0]?.screenX||0)-touchStart;if(Math.abs(dx)>45)setPhoto(index+(dx<0?1:-1))},{passive:true})
   setPhoto(0)
 
-  const message = `Bonjour BY CARS, je suis intéressé(e) par le véhicule ${title} ${vehicle.trim||''} affiché à ${fmtPrice(vehicle.price_ht)} HT.`
+  const priceText = vehicle.price_ht == null ? 'sur devis' : `${fmtPrice(vehicle.price_ht)} HT`
+  const message = `Bonjour BY CARS, je suis intéressé(e) par le véhicule ${title} ${vehicle.trim||''} affiché ${priceText}.`
   $('#vehicleWhatsapp').href = whatsappLink(message)
   $('#vehicleWhatsappMobile').href = whatsappLink(message)
 }

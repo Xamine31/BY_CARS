@@ -2,11 +2,13 @@ import { getSupabase, isSupabaseConfigured } from './supabase-client.js'
 
 const $ = (s,r=document)=>r.querySelector(s)
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)]
-const fmtPrice=v=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(v||0))
+const fmtPrice=v=>(v===null||v===undefined||v==='')?'Sur devis':new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(v))
 const esc=value=>String(value??'').replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))
 let supabase=null
 let vehicles=[]
 let editingVehicle=null
+let selectedPhotoFiles=[]
+let previewObjectUrls=[]
 
 function showOnly(id){['setupScreen','loginScreen','deniedScreen','dashboard'].forEach(x=>$('#'+x).hidden=x!==id)}
 function status(el,msg,error=false){if(!el)return;el.textContent=msg;el.classList.toggle('is-error',error)}
@@ -80,7 +82,7 @@ function renderAdminList(){
   $('#adminVehicleList').innerHTML=list.map(v=>`<div class="admin-vehicle-row">
     <img class="admin-thumb" src="${esc(firstPhoto(v))}" alt="" />
     <div class="admin-vehicle-name"><b>${esc(v.brand)} ${esc(v.model)}</b><span>${esc(v.trim||'')}</span></div>
-    <div class="admin-row-meta"><b>${fmtPrice(v.price_ht)} HT</b><span>${esc(v.year||'')} · ${new Intl.NumberFormat('fr-FR').format(Number(v.mileage||0))} km</span></div>
+    <div class="admin-row-meta"><b>${v.price_ht==null?'Sur devis':`${fmtPrice(v.price_ht)} HT`}</b><span>${esc(v.year||'')} · ${new Intl.NumberFormat('fr-FR').format(Number(v.mileage||0))} km</span></div>
     <div><span class="admin-status-pill ${v.published?'':'draft'}">${v.published?'Publié':'Brouillon'}</span></div>
     <div class="row-actions"><button data-edit="${esc(v.id)}">Modifier</button><button class="delete" data-delete="${esc(v.id)}">Supprimer</button></div>
   </div>`).join('')
@@ -106,6 +108,51 @@ $$('.admin-nav-item').forEach(b=>b.onclick=()=>b.dataset.view==='form'?showFormV
 $('#quickAdd')?.addEventListener('click',()=>showFormView(false))
 $('#cancelEdit')?.addEventListener('click',showVehiclesView)
 
+function clearSelectedPhotoPreview(){
+  previewObjectUrls.forEach(url=>URL.revokeObjectURL(url))
+  previewObjectUrls=[]
+  selectedPhotoFiles=[]
+  const input=$('#photos')
+  if(input) input.value=''
+  const preview=$('#selectedPhotosPreview')
+  if(preview) preview.innerHTML=''
+  const block=$('#selectedPhotosBlock')
+  if(block) block.hidden=true
+  const count=$('#selectedPhotosCount')
+  if(count) count.textContent=''
+}
+
+function syncSelectedFilesInput(){
+  const input=$('#photos')
+  if(!input || typeof DataTransfer==='undefined') return
+  const transfer=new DataTransfer()
+  selectedPhotoFiles.forEach(file=>transfer.items.add(file))
+  input.files=transfer.files
+}
+
+function renderSelectedPhotoPreview(){
+  previewObjectUrls.forEach(url=>URL.revokeObjectURL(url))
+  previewObjectUrls=selectedPhotoFiles.map(file=>URL.createObjectURL(file))
+  const preview=$('#selectedPhotosPreview')
+  const block=$('#selectedPhotosBlock')
+  const count=$('#selectedPhotosCount')
+  if(!preview||!block||!count)return
+  block.hidden=selectedPhotoFiles.length===0
+  count.textContent=selectedPhotoFiles.length?`${selectedPhotoFiles.length} photo${selectedPhotoFiles.length>1?'s':''} sélectionnée${selectedPhotoFiles.length>1?'s':''}`:''
+  preview.innerHTML=selectedPhotoFiles.map((file,index)=>`<figure class="selected-photo-card"><img src="${esc(previewObjectUrls[index])}" alt="Aperçu ${index+1}" /><figcaption>${esc(file.name)}</figcaption><button type="button" data-remove-photo="${index}" aria-label="Retirer cette photo">×</button></figure>`).join('')
+  $$('[data-remove-photo]',preview).forEach(button=>button.addEventListener('click',()=>{
+    const index=Number(button.dataset.removePhoto)
+    selectedPhotoFiles.splice(index,1)
+    syncSelectedFilesInput()
+    renderSelectedPhotoPreview()
+  }))
+}
+
+$('#photos')?.addEventListener('change',event=>{
+  selectedPhotoFiles=[...(event.target.files||[])]
+  renderSelectedPhotoPreview()
+})
+
 function resetForm(){
   editingVehicle=null
   $('#vehicleForm').reset()
@@ -122,7 +169,9 @@ function resetForm(){
   $('#formKicker').textContent='Nouveau véhicule'
   $('#formTitle').textContent='Ajouter au stock'
   $('#saveVehicle').textContent='Enregistrer le véhicule'
+  clearSelectedPhotoPreview()
   $('#existingPhotos').innerHTML=''
+  $('#existingPhotosBlock').hidden=true
   $('#clearPhotos').checked=false
   $('#clearPhotosWrap').hidden=true
   status($('#vehicleFormStatus'),'')
@@ -154,8 +203,10 @@ function editVehicle(id){
   $('#formKicker').textContent='Modification'
   $('#formTitle').textContent=`${v.brand} ${v.model}`
   $('#saveVehicle').textContent='Mettre à jour'
+  clearSelectedPhotoPreview()
   const photos=photoList(v)
-  $('#existingPhotos').innerHTML=photos.map(p=>`<img src="${esc(p)}" alt="Photo du véhicule" />`).join('')
+  $('#existingPhotos').innerHTML=photos.map((p,index)=>`<figure><img src="${esc(p)}" alt="Photo enregistrée ${index+1}" /></figure>`).join('')
+  $('#existingPhotosBlock').hidden=photos.length===0
   $('#clearPhotosWrap').hidden=photos.length===0
   $('#clearPhotos').checked=false
   window.scrollTo({top:0,behavior:'smooth'})
@@ -185,14 +236,14 @@ $('#vehicleForm')?.addEventListener('submit',async e=>{
   try{
     const id=$('#vehicleId').value||crypto.randomUUID()
     let photos=editingVehicle&&!$('#clearPhotos').checked?photoList(editingVehicle):[]
-    const files=[...$('#photos').files]
+    const files=[...selectedPhotoFiles]
     if(files.length){status(s,`Envoi de ${files.length} photo(s)…`);photos=photos.concat(await uploadPhotos(files,id))}
     const payload={
       id,
       brand:$('#brand').value.trim(),
       model:$('#model').value.trim(),
       trim:$('#trim').value.trim()||null,
-      price_ht:Number($('#price_ht').value),
+      price_ht:$('#price_ht').value.trim()===''?null:Number($('#price_ht').value),
       condition:$('#condition').value,
       year:Number($('#yearInput').value),
       mileage:Number($('#mileage').value||0),

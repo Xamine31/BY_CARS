@@ -6,5 +6,5 @@
 insert into public.admins (user_id, email)
 select id, email
 from auth.users
-where lower(email) = lower('admin@bycars.fr')
+where lower(email) = lower('VOTRE-EMAIL@EXEMPLE.FR')
 on conflict (user_id) do update set email = excluded.email;

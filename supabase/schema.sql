@@ -8,7 +8,7 @@ create table if not exists public.vehicles (
   brand text not null,
   model text not null,
   trim text,
-  price_ht numeric(12,2) not null check (price_ht >= 0),
+  price_ht numeric(12,2) check (price_ht is null or price_ht >= 0),
   condition text not null default 'occasion' check (condition in ('neuf','occasion')),
   year integer check (year is null or year between 1990 and 2100),
   mileage integer not null default 0 check (mileage >= 0),

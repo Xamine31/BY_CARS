@@ -1,6 +1,6 @@
 # BY CARS — Site production GitHub Pages + Supabase
 
-Site statique multipage prêt à publier sur GitHub Pages, avec Supabase pour le stock, les photos, les demandes de contact et l'authentification de l'espace administrateur.
+Site statique multipage prêt à publier sur GitHub Pages, avec Supabase pour le stock, les photos et l'authentification de l'espace administrateur. Le formulaire de contact ouvre directement WhatsApp sur le numéro configuré dans `config.js`.
 
 ## Pages
 
@@ -22,7 +22,6 @@ Le fichier `schema.sql` crée :
 
 - `vehicles`
 - `admins`
-- `contact_requests`
 - les règles RLS
 - le bucket public `vehicle-photos`
 - les règles d'upload réservées aux administrateurs
@@ -89,13 +88,29 @@ Depuis `admin.html`, un administrateur peut :
 - ajouter/modifier/supprimer un véhicule
 - saisir marque, modèle, finition, prix HT, état, année et kilométrage
 - renseigner motorisation, boîte, moteur, puissance, couleur, portes et places
-- ajouter plusieurs photos
+- ajouter plusieurs photos avec aperçu avant enregistrement
+- laisser le prix vide pour afficher **Sur devis**
 - publier/dépublier un véhicule
 - marquer un véhicule disponible/indisponible
 - choisir les véhicules mis en avant sur l'accueil
 
-Les photos sont envoyées dans Supabase Storage, bucket `vehicle-photos`.
+Les photos sont prévisualisées dans l'interface avant l'enregistrement, puis envoyées dans Supabase Storage, bucket `vehicle-photos`.
+
+Le formulaire `contact.html` n'enregistre pas la demande en base : il prépare le message et ouvre WhatsApp vers `phoneIntl` défini dans `config.js`.
 
 ## Important avant mise en ligne publique
 
 Le fichier `supabase/seed.sql` sert uniquement à préremplir le catalogue. Vérifiez que les véhicules, prix, kilométrages et photos correspondent à votre stock réel avant de communiquer le site à des clients.
+
+
+## Mise à jour d'une base déjà créée
+
+Si vous aviez déjà exécuté une ancienne version de `schema.sql`, exécutez une fois :
+
+`supabase/migration-prix-sur-devis.sql`
+
+Cette migration rend `price_ht` facultatif. Quand le champ Prix HT est laissé vide dans l'admin, le site affiche **Sur devis**.
+
+## Image d'accueil
+
+Le visuel `assets/hero-showroom.webp` est affiché sans recadrage destructif. Sur mobile, l'image est présentée en format 16:9 complet au-dessus du contenu du hero afin de rester entièrement visible.

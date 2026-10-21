@@ -24,8 +24,14 @@ function render(){
     return haystack.includes(q) && (c==='all'||v.condition===c) && (f==='all'||v.fuel===f)
   })
   list = [...list].sort((a,b)=>{
-    if(s==='price-asc') return Number(a.price_ht||0)-Number(b.price_ht||0)
-    if(s==='price-desc') return Number(b.price_ht||0)-Number(a.price_ht||0)
+    if(s==='price-asc' || s==='price-desc'){
+      const pa = a.price_ht == null ? null : Number(a.price_ht)
+      const pb = b.price_ht == null ? null : Number(b.price_ht)
+      if(pa === null && pb === null) return 0
+      if(pa === null) return 1
+      if(pb === null) return -1
+      return s==='price-asc' ? pa-pb : pb-pa
+    }
     if(s==='year-desc') return Number(b.year||0)-Number(a.year||0)
     if(s==='km-asc') return Number(a.mileage||0)-Number(b.mileage||0)
     return String(b.created_at||'').localeCompare(String(a.created_at||''))
