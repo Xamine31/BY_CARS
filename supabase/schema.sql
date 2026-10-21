@@ -1,5 +1,5 @@
--- BY CARS — Supabase setup
--- Exécutez ce fichier dans Supabase > SQL Editor.
+-- BY CARS — INITIALISATION SUPABASE
+-- À exécuter une seule fois dans Supabase > SQL Editor.
 
 create extension if not exists pgcrypto;
 
@@ -8,17 +8,17 @@ create table if not exists public.vehicles (
   brand text not null,
   model text not null,
   trim text,
-  price_ht numeric(12,2) not null default 0,
+  price_ht numeric(12,2) not null check (price_ht >= 0),
   condition text not null default 'occasion' check (condition in ('neuf','occasion')),
-  year integer,
-  mileage integer not null default 0,
+  year integer check (year is null or year between 1990 and 2100),
+  mileage integer not null default 0 check (mileage >= 0),
   fuel text,
   transmission text,
   engine text,
-  power_hp integer,
+  power_hp integer check (power_hp is null or power_hp >= 0),
   color text,
-  doors integer,
-  seats integer,
+  doors integer check (doors is null or doors between 1 and 9),
+  seats integer check (seats is null or seats between 1 and 20),
   description text,
   photos text[] not null default '{}',
   featured boolean not null default false,
@@ -43,104 +43,201 @@ create table if not exists public.contact_requests (
   created_at timestamptz not null default now()
 );
 
+create index if not exists vehicles_public_listing_idx
+  on public.vehicles (published, available, featured, created_at desc);
+
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+security invoker
+set search_path = ''
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists vehicles_set_updated_at on public.vehicles;
+create trigger vehicles_set_updated_at
+before update on public.vehicles
+for each row execute function public.set_updated_at();
+
+-- RLS
 alter table public.vehicles enable row level security;
 alter table public.admins enable row level security;
 alter table public.contact_requests enable row level security;
 
--- Recréation propre des policies si le script est relancé.
-drop policy if exists "Public can read published vehicles" on public.vehicles;
-drop policy if exists "Admins can read all vehicles" on public.vehicles;
-drop policy if exists "Admins can insert vehicles" on public.vehicles;
-drop policy if exists "Admins can update vehicles" on public.vehicles;
-drop policy if exists "Admins can delete vehicles" on public.vehicles;
-drop policy if exists "Admins can read own admin row" on public.admins;
-drop policy if exists "Anyone can create contact request" on public.contact_requests;
-drop policy if exists "Admins can read contact requests" on public.contact_requests;
+-- Grants explicites : la clé publique ne peut faire que ce qui est autorisé ici + par RLS.
+revoke all on table public.vehicles from anon, authenticated;
+revoke all on table public.admins from anon, authenticated;
+revoke all on table public.contact_requests from anon, authenticated;
 
-create policy "Public can read published vehicles"
-on public.vehicles for select
+grant select on table public.vehicles to anon, authenticated;
+grant insert, update, delete on table public.vehicles to authenticated;
+grant select on table public.admins to authenticated;
+grant insert on table public.contact_requests to anon, authenticated;
+grant select, delete on table public.contact_requests to authenticated;
+
+grant usage, select on sequence public.contact_requests_id_seq to anon, authenticated;
+
+-- Nettoyage si le script est rejoué.
+drop policy if exists "Visitors read published vehicles" on public.vehicles;
+drop policy if exists "Authenticated read published or admin vehicles" on public.vehicles;
+drop policy if exists "Admins insert vehicles" on public.vehicles;
+drop policy if exists "Admins update vehicles" on public.vehicles;
+drop policy if exists "Admins delete vehicles" on public.vehicles;
+drop policy if exists "Admins read own row" on public.admins;
+drop policy if exists "Visitors send contact requests" on public.contact_requests;
+drop policy if exists "Admins read contact requests" on public.contact_requests;
+drop policy if exists "Admins delete contact requests" on public.contact_requests;
+
+create policy "Visitors read published vehicles"
+on public.vehicles
+for select
+to anon
 using (published = true);
 
-create policy "Admins can read all vehicles"
-on public.vehicles for select
+create policy "Authenticated read published or admin vehicles"
+on public.vehicles
+for select
 to authenticated
-using (exists (select 1 from public.admins a where a.user_id = auth.uid()));
+using (
+  published = true
+  or exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
+);
 
-create policy "Admins can insert vehicles"
-on public.vehicles for insert
+create policy "Admins insert vehicles"
+on public.vehicles
+for insert
 to authenticated
-with check (exists (select 1 from public.admins a where a.user_id = auth.uid()));
+with check (
+  exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
+);
 
-create policy "Admins can update vehicles"
-on public.vehicles for update
+create policy "Admins update vehicles"
+on public.vehicles
+for update
 to authenticated
-using (exists (select 1 from public.admins a where a.user_id = auth.uid()))
-with check (exists (select 1 from public.admins a where a.user_id = auth.uid()));
+using (
+  exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
+)
+with check (
+  exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
+);
 
-create policy "Admins can delete vehicles"
-on public.vehicles for delete
+create policy "Admins delete vehicles"
+on public.vehicles
+for delete
 to authenticated
-using (exists (select 1 from public.admins a where a.user_id = auth.uid()));
+using (
+  exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
+);
 
-create policy "Admins can read own admin row"
-on public.admins for select
+create policy "Admins read own row"
+on public.admins
+for select
 to authenticated
-using (user_id = auth.uid());
+using (user_id = (select auth.uid()));
 
-create policy "Anyone can create contact request"
-on public.contact_requests for insert
+create policy "Visitors send contact requests"
+on public.contact_requests
+for insert
 to anon, authenticated
 with check (true);
 
-create policy "Admins can read contact requests"
-on public.contact_requests for select
+create policy "Admins read contact requests"
+on public.contact_requests
+for select
 to authenticated
-using (exists (select 1 from public.admins a where a.user_id = auth.uid()));
+using (
+  exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
+);
 
--- Bucket public pour les photos véhicules.
+create policy "Admins delete contact requests"
+on public.contact_requests
+for delete
+to authenticated
+using (
+  exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
+);
+
+-- Stockage photos
 insert into storage.buckets (id, name, public)
 values ('vehicle-photos', 'vehicle-photos', true)
 on conflict (id) do update set public = true;
 
-drop policy if exists "Public can view vehicle photos" on storage.objects;
-drop policy if exists "Admins can upload vehicle photos" on storage.objects;
-drop policy if exists "Admins can update vehicle photos" on storage.objects;
-drop policy if exists "Admins can delete vehicle photos" on storage.objects;
+drop policy if exists "Public read vehicle photos" on storage.objects;
+drop policy if exists "Admins upload vehicle photos" on storage.objects;
+drop policy if exists "Admins update vehicle photos" on storage.objects;
+drop policy if exists "Admins delete vehicle photos" on storage.objects;
 
-create policy "Public can view vehicle photos"
-on storage.objects for select
+create policy "Public read vehicle photos"
+on storage.objects
+for select
+to anon, authenticated
 using (bucket_id = 'vehicle-photos');
 
-create policy "Admins can upload vehicle photos"
-on storage.objects for insert
+create policy "Admins upload vehicle photos"
+on storage.objects
+for insert
 to authenticated
 with check (
   bucket_id = 'vehicle-photos'
-  and exists (select 1 from public.admins a where a.user_id = auth.uid())
+  and exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
 );
 
-create policy "Admins can update vehicle photos"
-on storage.objects for update
+create policy "Admins update vehicle photos"
+on storage.objects
+for update
 to authenticated
 using (
   bucket_id = 'vehicle-photos'
-  and exists (select 1 from public.admins a where a.user_id = auth.uid())
+  and exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
 )
 with check (
   bucket_id = 'vehicle-photos'
-  and exists (select 1 from public.admins a where a.user_id = auth.uid())
+  and exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
 );
 
-create policy "Admins can delete vehicle photos"
-on storage.objects for delete
+create policy "Admins delete vehicle photos"
+on storage.objects
+for delete
 to authenticated
 using (
   bucket_id = 'vehicle-photos'
-  and exists (select 1 from public.admins a where a.user_id = auth.uid())
+  and exists (
+    select 1 from public.admins a
+    where a.user_id = (select auth.uid())
+  )
 );
-
--- IMPORTANT : après avoir créé ton utilisateur dans Authentication > Users,
--- remplace l'UUID et l'email ci-dessous puis exécute SEULEMENT cette ligne :
--- insert into public.admins (user_id, email)
--- values ('UUID-DE-TON-UTILISATEUR', 'ton@email.com')
--- on conflict (user_id) do update set email = excluded.email;

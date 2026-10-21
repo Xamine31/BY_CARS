@@ -7,3 +7,7 @@
 .demo-banner{margin-bottom:20px;border:1px solid #ffd1bd;background:#fff7f2;border-radius:18px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:18px}.demo-banner b{display:block;font-size:.8rem;color:#a43e13}.demo-banner span{display:block;margin-top:4px;font-size:.7rem;line-height:1.5;color:#7a5a4c}.demo-banner button{flex:0 0 auto;border:1px solid #ffc2a7;background:#fff;color:#a43e13;border-radius:10px;padding:9px 11px;font-size:.68rem;font-weight:800}.demo-banner[hidden]{display:none!important}
 @media(max-width:950px){.admin-logo{width:145px;height:44px;margin:0}.demo-banner{align-items:flex-start}}
 @media(max-width:620px){.demo-banner{flex-direction:column}.demo-banner button{width:100%}}
+
+.admin-status.is-error{color:#b42318}.auth-forgot{align-self:flex-start;padding:0;margin-top:-4px}.auth-forgot:hover{color:var(--orange)}
+
+[hidden]{display:none!important}

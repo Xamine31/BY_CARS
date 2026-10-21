@@ -1,50 +1,101 @@
-# BY CARS — version multipage moderne, sans build
+# BY CARS — Site production GitHub Pages + Supabase
 
-Cette version est conçue pour être déposée directement sur GitHub Pages.
+Site statique multipage prêt à publier sur GitHub Pages, avec Supabase pour le stock, les photos, les demandes de contact et l'authentification de l'espace administrateur.
 
-## Pages publiques
+## Pages
 
-- `index.html` — accueil
-- `stock.html` — catalogue + recherche + filtres
-- `vehicule.html?id=...` — fiche individuelle de chaque véhicule
-- `export.html` — page dédiée export France → Algérie
-- `contact.html` — formulaire de contact
+- `index.html` : accueil
+- `stock.html` : catalogue et recherche
+- `vehicule.html?id=...` : fiche détaillée d'un véhicule
+- `export.html` : export vers l'Algérie, le Maroc et la Tunisie
+- `contact.html` : formulaire de contact
+- `admin.html` : espace privé de gestion (aucun lien admin sur le site public)
 
-L'administration est volontairement absente de la navigation publique.
-Accès privé : `admin.html`
+## 1. Créer le projet Supabase
 
-## Aucun build
+1. Créez un nouveau projet Supabase.
+2. Ouvrez **SQL Editor**.
+3. Exécutez `supabase/schema.sql`.
+4. Pour préremplir le stock, exécutez ensuite `supabase/seed.sql`.
 
-Il n'y a pas de Vite, npm, Node ou TypeScript à lancer. GitHub Pages publie directement les fichiers.
+Le fichier `schema.sql` crée :
 
-Le workflow est déjà inclus : `.github/workflows/deploy.yml`.
+- `vehicles`
+- `admins`
+- `contact_requests`
+- les règles RLS
+- le bucket public `vehicle-photos`
+- les règles d'upload réservées aux administrateurs
 
-## Connexion Supabase
+## 2. Créer le compte administrateur
 
-1. Ouvrez `supabase/schema.sql` dans Supabase > SQL Editor et exécutez le script.
-2. Créez votre utilisateur dans Authentication > Users.
-3. Ajoutez cet utilisateur dans la table `admins` comme indiqué en bas du fichier SQL.
-4. Ouvrez `config.js` et renseignez :
+1. Dans Supabase, ouvrez **Authentication > Users**.
+2. Créez un utilisateur avec l'adresse e-mail et le mot de passe souhaités.
+3. Ouvrez `supabase/add-admin.sql`.
+4. Remplacez `VOTRE-EMAIL@EXEMPLE.FR` par l'e-mail du compte.
+5. Exécutez cette requête dans **SQL Editor**.
+
+L'utilisateur pourra ensuite se connecter sur :
+
+`https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/admin.html`
+
+## 3. Connecter le site à Supabase
+
+Dans Supabase, récupérez :
+
+- le **Project URL**
+- la **Publishable key** (`sb_publishable_...`)
+
+Modifiez `config.js` :
 
 ```js
 window.BY_CARS_CONFIG = {
   supabaseUrl: 'https://VOTRE-PROJET.supabase.co',
-  supabaseAnonKey: 'VOTRE_CLE_PUBLIQUE',
+  supabasePublishableKey: 'sb_publishable_VOTRE_CLE',
   phoneDisplay: '06 18 17 59 11',
   phoneIntl: '33618175911',
   city: 'Marseille, France'
 }
 ```
 
-Utilisez uniquement la clé publique `anon` / `publishable`. Ne mettez jamais une clé `service_role` dans un site public.
+La publishable key est faite pour être utilisée dans le navigateur. Ne mettez jamais de clé `sb_secret_...` ni de clé legacy `service_role` dans GitHub ou dans le site.
 
-## Mise en ligne GitHub
+## 4. Configuration Auth Supabase
 
-Décompressez le ZIP puis copiez tout son contenu à la racine du dépôt GitHub.
-Dans Settings > Pages, sélectionnez GitHub Actions.
+Dans **Authentication > URL Configuration** :
 
-Le site fonctionne en mode démonstration tant que Supabase n'est pas configuré.
+- **Site URL** : `https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/`
+- ajoutez aussi cette URL dans les Redirect URLs si vous activez plus tard la récupération de mot de passe ou des connexions par lien.
 
+L'authentification e-mail/mot de passe est utilisée par `admin.html`.
 
-## Version actuelle
-Cette version reprend exactement le thème visuel de **BY-CARS-MULTIPAGE-MODERNE-GITHUB** tout en conservant le logo BY CARS nettoyé, les destinations Algérie / Maroc / Tunisie, les vraies photos de démonstration et le mode admin local sans Supabase.
+## 5. Publier sur GitHub Pages
+
+1. Créez un dépôt GitHub.
+2. Envoyez **le contenu de ce dossier** à la racine du dépôt.
+3. Vérifiez que `.github/workflows/deploy.yml` est présent.
+4. Dans GitHub : **Settings > Pages > Source > GitHub Actions**.
+5. Faites un commit/push sur `main`.
+6. Ouvrez l'onglet **Actions** et attendez que le workflow soit vert.
+
+Le site sera publié à une URL du type :
+
+`https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/`
+
+## 6. Utilisation admin
+
+Depuis `admin.html`, un administrateur peut :
+
+- ajouter/modifier/supprimer un véhicule
+- saisir marque, modèle, finition, prix HT, état, année et kilométrage
+- renseigner motorisation, boîte, moteur, puissance, couleur, portes et places
+- ajouter plusieurs photos
+- publier/dépublier un véhicule
+- marquer un véhicule disponible/indisponible
+- choisir les véhicules mis en avant sur l'accueil
+
+Les photos sont envoyées dans Supabase Storage, bucket `vehicle-photos`.
+
+## Important avant mise en ligne publique
+
+Le fichier `supabase/seed.sql` sert uniquement à préremplir le catalogue. Vérifiez que les véhicules, prix, kilométrages et photos correspondent à votre stock réel avant de communiquer le site à des clients.

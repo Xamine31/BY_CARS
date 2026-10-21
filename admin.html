@@ -14,11 +14,9 @@
   <div class="admin-auth-shell" id="setupScreen" hidden>
     <div class="auth-card">
       <img src="assets/logo-bycars-clean.png" alt="BY CARS" class="auth-logo" />
-      <span class="admin-kicker">Connexion indisponible</span>
-      <h1>Vérifiez Supabase.</h1>
-      <p>La configuration semble renseignée mais la connexion n’a pas pu être initialisée. Vérifiez les valeurs de <code>config.js</code>.</p>
-      <div class="code-hint"><b>Fichier à modifier</b><span>config.js</span></div>
-      <p class="admin-note">N’utilisez jamais la clé <b>service_role</b> ici. La clé publique anon/publishable est prévue pour le navigateur avec les règles RLS du fichier SQL.</p>
+      <span class="admin-kicker">Espace privé</span>
+      <h1>Service indisponible.</h1>
+      <p>L’espace de gestion n’est pas encore connecté. Réessayez après la configuration du service.</p>
     </div>
   </div>
 
@@ -40,7 +38,7 @@
       <img src="assets/logo-bycars-clean.png" alt="BY CARS" class="auth-logo" />
       <span class="admin-kicker">Accès refusé</span>
       <h1>Compte non autorisé.</h1>
-      <p>Ce compte existe dans Supabase Auth mais n’est pas déclaré dans la table <code>admins</code>.</p>
+      <p>Ce compte ne dispose pas des droits nécessaires pour accéder à la gestion.</p>
       <button class="btn btn-outline full" id="deniedLogout">Se déconnecter</button>
     </div>
   </div>
@@ -63,7 +61,6 @@
       </header>
 
       <main class="admin-content">
-        <div class="demo-banner" id="demoModeBanner" hidden><div><b>Mode démonstration local</b><span>Supabase n’est pas encore connecté. Vous pouvez tester l’espace admin : les véhicules ajoutés seront visibles sur le site dans ce navigateur.</span></div><button id="resetDemo" type="button">Réinitialiser la démo</button></div>
         <section id="vehiclesView">
           <div class="admin-stats">
             <div><span>Total</span><b id="statTotal">0</b></div>

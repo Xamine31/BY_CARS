@@ -1,8 +1,6 @@
 import { getSupabase, isSupabaseConfigured } from './supabase-client.js'
-import { demoVehicles } from './data.js'
 
 export const cfg = window.BY_CARS_CONFIG || {}
-export const DEMO_STORAGE_KEY = 'bycars_demo_vehicles_v3'
 export const $ = (selector, root=document) => root.querySelector(selector)
 export const $$ = (selector, root=document) => [...root.querySelectorAll(selector)]
 export const esc = value => String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))
@@ -10,42 +8,38 @@ export const fmtPrice = value => new Intl.NumberFormat('fr-FR',{style:'currency'
 export const fmtKm = value => `${new Intl.NumberFormat('fr-FR').format(Number(value || 0))} km`
 export const safePhotos = vehicle => Array.isArray(vehicle?.photos) && vehicle.photos.filter(Boolean).length ? vehicle.photos.filter(Boolean) : ['assets/car-placeholder-1.svg']
 
-export function loadDemoVehicles(){
-  try{
-    const saved = JSON.parse(localStorage.getItem(DEMO_STORAGE_KEY) || 'null')
-    if(Array.isArray(saved) && saved.length) return saved
-  }catch(error){ console.warn('Stock démo illisible, restauration du stock exemple.', error) }
-  return typeof structuredClone === 'function' ? structuredClone(demoVehicles) : JSON.parse(JSON.stringify(demoVehicles))
-}
-
-export function saveDemoVehicles(vehicles){
-  localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(vehicles))
-}
-
 export async function loadVehicles(){
-  if(!isSupabaseConfigured()) return loadDemoVehicles().filter(v=>v.published!==false)
+  if(!isSupabaseConfigured()) return []
   try{
     const supabase = await getSupabase()
-    const { data, error } = await supabase.from('vehicles').select('*').eq('published',true).order('created_at',{ascending:false})
+    const { data, error } = await supabase
+      .from('vehicles')
+      .select('*')
+      .eq('published',true)
+      .order('created_at',{ascending:false})
     if(error) throw error
     return Array.isArray(data) ? data : []
   }catch(error){
-    console.error('BY CARS : impossible de charger Supabase, affichage du stock de démonstration.', error)
-    return loadDemoVehicles().filter(v=>v.published!==false)
+    console.error('Impossible de charger le stock.', error)
+    return []
   }
 }
 
 export async function loadVehicle(id){
-  if(!id) return null
-  if(!isSupabaseConfigured()) return loadDemoVehicles().find(v=>String(v.id)===String(id) && v.published!==false) || null
+  if(!id || !isSupabaseConfigured()) return null
   try{
     const supabase = await getSupabase()
-    const { data, error } = await supabase.from('vehicles').select('*').eq('id',id).eq('published',true).maybeSingle()
+    const { data, error } = await supabase
+      .from('vehicles')
+      .select('*')
+      .eq('id',id)
+      .eq('published',true)
+      .maybeSingle()
     if(error) throw error
     return data || null
   }catch(error){
-    console.error('BY CARS : impossible de charger la fiche Supabase.', error)
-    return loadDemoVehicles().find(v=>String(v.id)===String(id) && v.published!==false) || null
+    console.error('Impossible de charger le véhicule.', error)
+    return null
   }
 }
 
@@ -68,7 +62,7 @@ export function vehicleCard(vehicle){
     <div class="car-content">
       <div class="car-overline"><span>${esc(vehicle.brand)}</span><span>${esc(vehicle.year || '')}</span></div>
       <h3><a href="${vehicleUrl(vehicle)}">${esc(vehicle.model)}</a></h3>
-      <p class="car-trim">${esc(vehicle.trim || 'Finition à préciser')}</p>
+      ${vehicle.trim ? `<p class="car-trim">${esc(vehicle.trim)}</p>` : ''}
       <div class="car-specs">
         <span>${esc(vehicle.fuel || '—')}</span><span>${esc(vehicle.transmission || '—')}</span><span>${fmtKm(vehicle.mileage)}</span>
       </div>
@@ -97,7 +91,9 @@ function initNavigation(){
       document.body.classList.toggle('nav-open',open)
     })
     $$('#mobileNav a').forEach(link=>link.addEventListener('click',()=>{
-      panel.classList.remove('open'); toggle.classList.remove('open'); document.body.classList.remove('nav-open')
+      panel.classList.remove('open')
+      toggle.classList.remove('open')
+      document.body.classList.remove('nav-open')
     }))
   }
   const current = (location.pathname.split('/').pop() || 'index.html').toLowerCase()

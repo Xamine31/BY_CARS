@@ -1,24 +1,14 @@
-BY CARS — VERSION MULTIPAGE MODERNE
-===================================
+BY CARS — MISE EN LIGNE
 
-1. Décompresse le ZIP.
-2. Dans ton dépôt GitHub, remplace les anciens fichiers par TOUT le contenu du ZIP.
-3. Vérifie que .github/workflows/deploy.yml est bien présent.
-4. Fais Commit changes.
-5. GitHub > Settings > Pages > Source : GitHub Actions.
-6. Attends que l'onglet Actions passe en vert.
+1) Supabase > SQL Editor : exécuter supabase/schema.sql
+2) Optionnel : exécuter supabase/seed.sql pour préremplir le stock
+3) Supabase > Authentication > Users : créer votre compte e-mail + mot de passe
+4) Modifier supabase/add-admin.sql avec votre e-mail puis l'exécuter
+5) Supabase > Connect / Settings > API Keys : copier Project URL + Publishable key
+6) Mettre ces 2 valeurs dans config.js
+7) Envoyer tout le dossier sur GitHub
+8) GitHub > Settings > Pages > Source : GitHub Actions
+9) Faire un commit sur main
+10) Admin : https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/admin.html
 
-PAGES :
-- index.html = accueil
-- stock.html = recherche et catalogue
-- vehicule.html?id=ID = une fiche dédiée par voiture
-- export.html = export Algérie
-- contact.html = contact
-- admin.html = administration privée (aucun bouton admin sur le site public)
-
-SUPABASE :
-- configure config.js avec ton URL Supabase + clé publique anon/publishable
-- exécute supabase/schema.sql dans SQL Editor
-
-IMPORTANT :
-Cette version n'utilise ni npm, ni Vite, ni build. Elle est faite pour GitHub Pages directement.
+Ne jamais mettre de clé Supabase secret/service_role dans le site.
