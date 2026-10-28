@@ -1,9 +1,9 @@
-import { $, whatsappLink } from './common.js'
+import { $, whatsappLink, siteSettingsReady } from './common.js'
 
 const form = $('#contactForm')
 const status = $('#formStatus')
 
-form?.addEventListener('submit', event => {
+form?.addEventListener('submit', async event => {
   event.preventDefault()
   const fd = new FormData(form)
   const name = String(fd.get('name') || '').trim()
@@ -22,6 +22,7 @@ form?.addEventListener('submit', event => {
   ].filter(value => value !== null)
 
   status.textContent = 'Ouverture de WhatsApp…'
-  const url = whatsappLink(lines.join('\n'))
+  await siteSettingsReady
+  const url = whatsappLink(lines.join('\n'), 'form')
   window.location.href = url
 })

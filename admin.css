@@ -17,3 +17,27 @@
 .selected-photos-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:10px}.selected-photo-card{position:relative;margin:0;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff}.selected-photo-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:var(--paper)}.selected-photo-card figcaption{padding:8px 9px;font-size:.61rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.selected-photo-card button{position:absolute;right:7px;top:7px;width:28px;height:28px;border:0;border-radius:999px;background:rgba(13,15,18,.82);color:#fff;font-size:1.05rem;line-height:1;display:grid;place-items:center}
 .existing-photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:9px;margin-top:0}.existing-photos figure{margin:0}.existing-photos img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:10px;border:1px solid var(--line);display:block}
 @media(max-width:620px){.selected-photos-preview{grid-template-columns:repeat(2,minmax(0,1fr))}.existing-photos{grid-template-columns:repeat(2,minmax(0,1fr))}.photo-upload-box{min-height:116px}.photo-preview-head{align-items:flex-start;flex-direction:column;gap:3px}}
+
+/* Admin : paramètres publics */
+.settings-form{max-width:1100px}
+.settings-wide{grid-column:span 2}
+.settings-hero-preview{overflow:hidden;border:1px solid var(--line);border-radius:17px;background:#09172b;max-width:740px;margin:14px 0}
+.settings-hero-preview img{display:block;width:100%;height:auto;object-fit:contain}
+.settings-upload{max-width:470px;margin:12px 0}
+.settings-form .check-line{display:flex;gap:10px;align-items:center;margin-top:16px}
+.settings-form .check-line input{min-height:auto;width:17px;height:17px}
+@media(max-width:950px){
+ .admin-sidebar{display:flex;flex-wrap:wrap;align-items:center;gap:7px;padding:10px 16px}
+ .admin-logo{margin-right:auto}
+ .admin-nav-item{display:inline-flex;align-items:center;justify-content:center;margin:0;font-size:.7rem;min-height:38px;white-space:normal;text-align:center}
+ .admin-logout{grid-column:auto;margin:0}
+ .admin-topbar{top:0}
+}
+@media(max-width:620px){
+ .admin-sidebar{gap:6px;padding:10px 12px}
+ .admin-logo{width:115px;height:40px}
+ .admin-nav-item{font-size:.66rem;min-height:36px;padding:7px 9px}
+ .admin-topbar{top:0}
+ .admin-logout{font-size:0}
+ .settings-wide{grid-column:span 1}
+}

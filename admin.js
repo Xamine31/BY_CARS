@@ -1,4 +1,5 @@
 import { getSupabase, isSupabaseConfigured } from './supabase-client.js'
+import { defaultSettings, digits, externalWebUrl } from './site-settings.js'
 
 const $ = (s,r=document)=>r.querySelector(s)
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)]
@@ -9,6 +10,8 @@ let vehicles=[]
 let editingVehicle=null
 let selectedPhotoFiles=[]
 let previewObjectUrls=[]
+let currentSiteSettings={...defaultSettings}
+let heroPreviewUrl=null
 
 function showOnly(id){['setupScreen','loginScreen','deniedScreen','dashboard'].forEach(x=>$('#'+x).hidden=x!==id)}
 function status(el,msg,error=false){if(!el)return;el.textContent=msg;el.classList.toggle('is-error',error)}
@@ -38,6 +41,7 @@ async function verifyAdmin(user){
   showOnly('dashboard')
   await loadVehicles()
   showVehiclesView()
+  await loadAdminSettings()
 }
 
 $('#loginForm')?.addEventListener('submit',async e=>{
@@ -94,17 +98,19 @@ $('#adminSearch')?.addEventListener('input',renderAdminList)
 function showVehiclesView(){
   $('#vehiclesView').hidden=false
   $('#formView').hidden=true
+  $('#settingsView').hidden=true
   $('#adminTitle').textContent='Véhicules'
   $$('.admin-nav-item').forEach(x=>x.classList.toggle('active',x.dataset.view==='vehicles'))
 }
 function showFormView(edit=false){
   $('#vehiclesView').hidden=true
   $('#formView').hidden=false
+  $('#settingsView').hidden=true
   $('#adminTitle').textContent=edit?'Modifier le véhicule':'Ajouter un véhicule'
   $$('.admin-nav-item').forEach(x=>x.classList.toggle('active',x.dataset.view==='form'))
   if(!edit)resetForm()
 }
-$$('.admin-nav-item').forEach(b=>b.onclick=()=>b.dataset.view==='form'?showFormView(false):showVehiclesView())
+$$('.admin-nav-item').forEach(b=>b.onclick=()=>b.dataset.view==='form'?showFormView(false):b.dataset.view==='settings'?showSettingsView():showVehiclesView())
 $('#quickAdd')?.addEventListener('click',()=>showFormView(false))
 $('#cancelEdit')?.addEventListener('click',showVehiclesView)
 
@@ -280,6 +286,105 @@ async function deleteVehicle(id){
   toast('Véhicule supprimé.')
   await loadVehicles()
 }
+
+
+// Coordonnées, réseaux sociaux et image d’accueil : lecture/écriture réservées aux admins.
+const settingIds={
+  phone_display:'settingPhoneDisplay',phone_intl:'settingPhoneIntl',form_whatsapp_intl:'settingFormPhone',
+  email:'settingEmail',address:'settingAddress',instagram_url:'settingInstagram',facebook_url:'settingFacebook',
+  tiktok_url:'settingTiktok',youtube_url:'settingYoutube',linkedin_url:'settingLinkedin'
+}
+function showSettingsView(){
+  $('#vehiclesView').hidden=true
+  $('#formView').hidden=true
+  $('#settingsView').hidden=false
+  $('#adminTitle').textContent='Coordonnées & personnalisation'
+  $$('.admin-nav-item').forEach(x=>x.classList.toggle('active',x.dataset.view==='settings'))
+  window.scrollTo({top:0,behavior:'smooth'})
+}
+function renderAdminSettings(){
+  for(const [key,id] of Object.entries(settingIds)) $('#'+id).value=currentSiteSettings[key]??''
+  $('#settingHeroReset').checked=false
+  $('#settingHeroFile').value=''
+  resetHeroPreview()
+  status($('#settingsStatus'),'')
+}
+function resetHeroPreview(){
+  if(heroPreviewUrl) URL.revokeObjectURL(heroPreviewUrl)
+  heroPreviewUrl=null
+  $('#settingHeroPreview').src=externalWebUrl(currentSiteSettings.hero_image_url)||'assets/hero-showroom.webp'
+}
+async function loadAdminSettings(){
+  try{
+    const {data,error}=await supabase.from('site_settings').select('*').eq('id',1).maybeSingle()
+    if(error) throw error
+    currentSiteSettings={...defaultSettings,...(data||{})}
+    renderAdminSettings()
+  }catch(error){
+    console.error(error)
+    renderAdminSettings()
+    status($('#settingsStatus'),'Paramètres indisponibles : exécutez supabase/migration-site-settings.sql dans Supabase avant de modifier ces informations.',true)
+  }
+}
+$('#settingHeroFile')?.addEventListener('change',()=>{
+  const file=$('#settingHeroFile').files?.[0]
+  if(heroPreviewUrl) URL.revokeObjectURL(heroPreviewUrl)
+  heroPreviewUrl=null
+  if(!file){resetHeroPreview();return}
+  if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024){
+    status($('#settingsStatus'),'Image non prise en charge : choisissez JPG, PNG ou WEBP (8 Mo max).',true)
+    $('#settingHeroFile').value=''
+    resetHeroPreview()
+    return
+  }
+  heroPreviewUrl=URL.createObjectURL(file)
+  $('#settingHeroPreview').src=heroPreviewUrl
+  $('#settingHeroReset').checked=false
+  status($('#settingsStatus'),'Aperçu prêt. Enregistrez pour publier cette image.')
+})
+$('#settingHeroReset')?.addEventListener('change',e=>{
+  if(e.target.checked){$('#settingHeroFile').value='';resetHeroPreview();$('#settingHeroPreview').src='assets/hero-showroom.webp'}
+  else resetHeroPreview()
+})
+$('#settingsForm')?.addEventListener('submit',async event=>{
+  event.preventDefault()
+  const statusEl=$('#settingsStatus')
+  const button=$('#saveSettings')
+  button.disabled=true
+  status(statusEl,'Enregistrement en cours…')
+  try{
+    const settings={id:1}
+    for(const [key,id] of Object.entries(settingIds))settings[key]=$('#'+id).value.trim()
+    for(const key of ['phone_intl','form_whatsapp_intl']){
+      settings[key]=digits(settings[key])
+      if(settings[key].length<8||settings[key].length>15)throw Error('Vérifiez les numéros internationaux (avec indicatif pays).')
+    }
+    for(const key of ['instagram_url','facebook_url','tiktok_url','youtube_url','linkedin_url']){
+      if(settings[key]&&!externalWebUrl(settings[key]))throw Error('Les réseaux sociaux doivent avoir une adresse https:// valide.')
+    }
+    settings.hero_image_url=$('#settingHeroReset').checked?null:currentSiteSettings.hero_image_url||null
+    const file=$('#settingHeroFile').files?.[0]
+    if(file&&!$('#settingHeroReset').checked){
+      if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>8*1024*1024)throw Error('Image non prise en charge (8 Mo max).')
+      status(statusEl,'Envoi de l’image d’accueil…')
+      const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg'
+      const path=`homepage/${crypto.randomUUID()}.${ext}`
+      const {error}=await supabase.storage.from('site-media').upload(path,file,{contentType:file.type,cacheControl:'3600',upsert:false})
+      if(error)throw error
+      const {data}=supabase.storage.from('site-media').getPublicUrl(path)
+      settings.hero_image_url=data.publicUrl
+    }
+    const {error}=await supabase.from('site_settings').upsert(settings,{onConflict:'id'})
+    if(error)throw error
+    currentSiteSettings={...currentSiteSettings,...settings}
+    renderAdminSettings()
+    status(statusEl,'Modifications enregistrées. Elles sont visibles sur le site public après actualisation.')
+    toast('Coordonnées et personnalisation mises à jour.')
+  }catch(error){
+    console.error(error)
+    status(statusEl,error?.message||'Enregistrement impossible.',true)
+  }finally{button.disabled=false}
+})
 
 function toast(message){
   const el=document.createElement('div')

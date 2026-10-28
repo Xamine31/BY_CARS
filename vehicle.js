@@ -1,4 +1,4 @@
-import { $, esc, fmtKm, fmtPrice, loadVehicle, safePhotos, whatsappLink } from './common.js'
+import { $, esc, fmtKm, fmtPrice, loadVehicle, safePhotos, whatsappLink, siteSettingsReady } from './common.js'
 
 const id = new URLSearchParams(location.search).get('id')
 const vehicle = await loadVehicle(id)
@@ -46,6 +46,7 @@ if(!vehicle){
   mainImage.addEventListener('touchend',e=>{const dx=(e.changedTouches[0]?.screenX||0)-touchStart;if(Math.abs(dx)>45)setPhoto(index+(dx<0?1:-1))},{passive:true})
   setPhoto(0)
 
+  await siteSettingsReady
   const priceText = vehicle.price_ht == null ? 'sur devis' : `${fmtPrice(vehicle.price_ht)} HT`
   const message = `Bonjour BY CARS, je suis intéressé(e) par le véhicule ${title} ${vehicle.trim||''} affiché ${priceText}.`
   $('#vehicleWhatsapp').href = whatsappLink(message)

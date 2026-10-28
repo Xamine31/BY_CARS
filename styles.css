@@ -52,3 +52,32 @@
 .footer-credit{display:inline-block!important;font-size:.66rem!important;color:rgba(255,255,255,.42)!important;margin-top:14px!important}.footer-credit:hover{color:#fff!important}
 
 [hidden]{display:none!important}
+
+/* Évolution BY CARS — titre long, à propos, réseaux et paramètres */
+.hero-inner{grid-template-columns:minmax(0,1.3fr) minmax(230px,.5fr);gap:38px;min-height:850px}
+.hero h1{font-size:clamp(2.6rem,4.5vw,4.9rem);line-height:1.06;letter-spacing:-.052em;max-width:860px}
+.hero h1 em{font-style:normal;color:var(--orange)}.hero-dash{font-weight:500;color:#fff}
+.hero-intro{max-width:690px;margin:0 0 28px}
+.hero-intro p{color:rgba(255,255,255,.78);font-size:.93rem;line-height:1.66;margin:0 0 11px}
+.hero-intro p:last-child{margin-bottom:0}
+.hero .hero-search{max-width:670px}.hero-side{margin-bottom:10px}
+.social-section{margin-top:28px;border-top:1px solid var(--line);padding-top:22px}
+.social-section h3{font-size:1.03rem;letter-spacing:-.02em;margin:0 0 14px}
+.social-links{display:flex;flex-wrap:wrap;gap:9px}
+.social-links a{display:inline-flex;align-items:center;min-height:42px;padding:10px 15px;border:1px solid var(--line);border-radius:12px;background:var(--paper);font-weight:800;font-size:.77rem;transition:.2s}
+.social-links a:hover{background:#fff1e9;border-color:#ffd0b6}
+.about-hero{padding:94px 0 85px}.about-hero .page-title{max-width:1000px}
+.about-hero h1{font-size:clamp(3rem,5.4vw,5.6rem);line-height:1.04;letter-spacing:-.06em}
+.about-layout{display:grid;grid-template-columns:minmax(240px,.7fr) 1fr;gap:10%;align-items:center}
+.about-heading h2{font-size:clamp(2rem,3.7vw,3.8rem);line-height:1.08;letter-spacing:-.055em;margin:15px 0}
+.about-text p{font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.85;color:#3c4a5b;margin:0}
+.about-big-year{display:block;font-size:clamp(4rem,9vw,7rem);font-weight:900;line-height:1;letter-spacing:-.075em;color:#ffc49f}
+@media(max-width:1040px){.hero-inner{grid-template-columns:1fr;min-height:auto;padding:78px 0 70px}.hero h1{max-width:780px;font-size:clamp(2.8rem,6vw,4.8rem)}}
+@media(max-width:680px){.hero-visual{aspect-ratio:auto;height:auto}.hero-visual img{width:100%;height:auto;object-fit:contain}.hero-inner{padding:38px 0 44px;gap:0}.hero h1{font-size:clamp(2.15rem,9vw,3.35rem);line-height:1.08;margin:15px 0 20px}.hero-intro p{font-size:.82rem;line-height:1.65}.hero-intro{margin-bottom:23px}.hero-meta{gap:10px}.about-hero{padding:68px 0}.about-hero h1{font-size:clamp(2.5rem,11vw,3.5rem)}.about-layout{grid-template-columns:1fr;gap:18px}.about-heading h2{font-size:2.5rem}.about-text p{font-size:1rem}.about-big-year{font-size:4.7rem}}
+
+/* La présentation longue est prioritaire : réserver toute la largeur du hero. */
+@media(min-width:1041px){
+ .hero-inner{grid-template-columns:minmax(0,1fr);min-height:850px;padding:72px 0}
+ .hero-copy{max-width:900px}
+ .hero-side{display:none}
+}

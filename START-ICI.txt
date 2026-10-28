@@ -1,18 +1,11 @@
-BY CARS — MISE EN LIGNE
+BY CARS — NOUVELLE VERSION
 
-1) Supabase > SQL Editor : exécuter supabase/schema.sql
-2) Optionnel : exécuter supabase/seed.sql pour préremplir le stock
-3) Supabase > Authentication > Users : créer votre compte e-mail + mot de passe
-4) Modifier supabase/add-admin.sql avec votre e-mail puis l'exécuter
-5) Supabase > Connect / Settings > API Keys : copier Project URL + Publishable key
-6) Mettre ces 2 valeurs dans config.js
-7) Envoyer tout le dossier sur GitHub
-8) GitHub > Settings > Pages > Source : GitHub Actions
-9) Faire un commit sur main
-10) Admin : https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/admin.html
+1. Si Supabase est déjà configuré : exécutez supabase/migration-site-settings.sql dans Supabase > SQL Editor.
+2. Si Supabase est neuf : exécutez supabase/schema.sql puis créez votre utilisateur Auth et donnez-lui accès avec supabase/add-admin.sql.
+3. Dans config.js, mettez votre URL Supabase et votre clé publishable.
+4. Envoyez le CONTENU du dossier sur GitHub et faites Commit changes.
+5. Sur GitHub : Settings > Pages > GitHub Actions.
+6. Accès admin : https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/admin.html
+7. Depuis l'admin : Coordonnées & personnalisation pour les réseaux, adresses, numéros et image d'accueil.
 
-Ne jamais mettre de clé Supabase secret/service_role dans le site.
-
-SI LA BASE EXISTE DEJA : executez supabase/migration-prix-sur-devis.sql une fois.
-Le formulaire Contact ouvre WhatsApp avec le numero phoneIntl de config.js.
-Prix vide dans l'admin = Sur devis.
+Pour les détails, consultez README.md.

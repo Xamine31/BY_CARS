@@ -1,4 +1,5 @@
 import { getSupabase, isSupabaseConfigured } from './supabase-client.js'
+import { loadSiteSettings, defaultSettings, digits, externalWebUrl, safeEmail } from './site-settings.js'
 
 export const cfg = window.BY_CARS_CONFIG || {}
 export const $ = (selector, root=document) => root.querySelector(selector)
@@ -74,10 +75,47 @@ export function vehicleCard(vehicle){
   </article>`
 }
 
-export function whatsappLink(message){
-  return `https://wa.me/${cfg.phoneIntl || '33618175911'}?text=${encodeURIComponent(message)}`
+let liveSettings = { ...defaultSettings }
+export const siteSettingsReady = loadSiteSettings().then(s=>{
+  liveSettings = s
+  updateContactUi()
+  return s
+})
+export function whatsappLink(message, kind='direct'){
+  const raw = kind === 'form' ? liveSettings.form_whatsapp_intl : liveSettings.phone_intl
+  const number = digits(raw) || (kind === 'form' ? '33615100628' : '33618175911')
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`
 }
 
+function updateContactUi(){
+  $$('.js-phone-display').forEach(el=>el.textContent=liveSettings.phone_display||defaultSettings.phone_display)
+  $$('.js-phone-link').forEach(el=>el.href=`tel:+${digits(liveSettings.phone_intl)||'33618175911'}`)
+  $$('.js-address').forEach(el=>el.textContent=liveSettings.address||defaultSettings.address)
+  $$('.js-email-link').forEach(el=>{
+    const email=safeEmail(liveSettings.email)
+    el.hidden=!email
+    if(email){el.href=`mailto:${email}`;const child=el.querySelector('b');if(child)child.textContent=email}
+  })
+  $$('.js-whatsapp-link').forEach(el=>{
+    el.href=whatsappLink('Bonjour BY CARS, je souhaite avoir des informations sur vos véhicules et votre service d’export vers l’Algérie, le Maroc et la Tunisie.')
+  })
+  const networks=[['Instagram','instagram_url'],['Facebook','facebook_url'],['TikTok','tiktok_url'],['YouTube','youtube_url'],['LinkedIn','linkedin_url']]
+  $$('.js-social-section').forEach(section=>{
+    const node=section.querySelector('.js-social-links');if(!node)return
+    node.replaceChildren()
+    for(const [label,key] of networks){
+      const href=externalWebUrl(liveSettings[key]);if(!href)continue
+      const a=document.createElement('a')
+      a.href=href;a.target='_blank';a.rel='noopener noreferrer'
+      a.textContent=`${label} ↗`;a.setAttribute('aria-label',`BY CARS sur ${label}`)
+      node.appendChild(a)
+    }
+    section.hidden=!node.children.length
+  })
+  $$('.js-hero-image').forEach(img=>{
+    img.src=externalWebUrl(liveSettings.hero_image_url)||'assets/hero-showroom.webp'
+  })
+}
 function initNavigation(){
   const toggle = $('#menuToggle')
   const panel = $('#mobileNav')
@@ -105,11 +143,7 @@ function initNavigation(){
 
 function initGlobal(){
   $$('.js-year').forEach(el=>el.textContent=String(new Date().getFullYear()))
-  $$('.js-phone-display').forEach(el=>el.textContent=cfg.phoneDisplay || '06 18 17 59 11')
-  $$('.js-phone-link').forEach(el=>el.href=`tel:+${cfg.phoneIntl || '33618175911'}`)
-  $$('.js-whatsapp-link').forEach(el=>{
-    if(!el.href || el.getAttribute('href')==='#') el.href=whatsappLink('Bonjour BY CARS, je souhaite avoir des informations sur vos véhicules et votre service d’export vers l’Algérie, le Maroc et la Tunisie.')
-  })
+  updateContactUi()
   initNavigation()
 }
 

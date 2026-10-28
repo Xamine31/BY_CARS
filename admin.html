@@ -49,6 +49,7 @@
       <div class="admin-nav-label">Gestion du showroom</div>
       <button class="admin-nav-item active" data-view="vehicles">Véhicules</button>
       <button class="admin-nav-item" data-view="form">Ajouter un véhicule</button>
+      <button class="admin-nav-item" data-view="settings">Coordonnées &amp; personnalisation</button>
       <div class="admin-sidebar-spacer"></div>
       <a class="admin-public-link" href="stock.html" target="_blank" rel="noreferrer">Voir le site public ↗</a>
       <button class="admin-logout" id="logoutBtn">Se déconnecter</button>
@@ -114,6 +115,33 @@
             </div></div>
 
             <div class="form-actions"><p class="admin-status" id="vehicleFormStatus"></p><button class="btn btn-primary" type="submit" id="saveVehicle">Enregistrer le véhicule</button></div>
+          </form>
+        </section>
+
+        <section id="settingsView" hidden>
+          <form class="admin-card vehicle-form settings-form" id="settingsForm">
+            <div class="form-title"><div><span class="admin-kicker">Personnalisation du site</span><h2>Coordonnées &amp; réseaux sociaux</h2></div></div>
+            <div class="form-section"><h3>Contact direct</h3><div class="admin-form-grid three">
+              <label>Numéro affiché pour les appels<input id="settingPhoneDisplay" type="tel" required placeholder="06 18 17 59 11" /></label>
+              <label>Numéro international pour appel et WhatsApp<input id="settingPhoneIntl" type="tel" required placeholder="33618175911" /></label>
+              <label>WhatsApp des formulaires<input id="settingFormPhone" type="tel" required placeholder="33615100628" /><small class="field-help">Les messages du formulaire Contact sont préparés pour ce numéro.</small></label>
+              <label>Email professionnel<input id="settingEmail" type="email" placeholder="contact@bycars.fr" /></label>
+              <label class="settings-wide">Adresse du garage<input id="settingAddress" required placeholder="54 Rue de la Joliette, Marseille" /></label>
+            </div></div>
+            <div class="form-section"><h3>Réseaux sociaux</h3><div class="admin-form-grid three">
+              <label>Instagram<input id="settingInstagram" type="url" placeholder="https://www.instagram.com/…" /></label>
+              <label>Facebook<input id="settingFacebook" type="url" placeholder="https://www.facebook.com/…" /></label>
+              <label>TikTok<input id="settingTiktok" type="url" placeholder="https://www.tiktok.com/@…" /></label>
+              <label>YouTube<input id="settingYoutube" type="url" placeholder="https://www.youtube.com/…" /></label>
+              <label>LinkedIn<input id="settingLinkedin" type="url" placeholder="https://www.linkedin.com/…" /></label>
+            </div></div>
+            <div class="form-section"><h3>Image principale de l’accueil</h3>
+              <p class="field-help">Importez une image JPG, PNG ou WEBP de 8 Mo maximum. Vous pourrez voir son aperçu avant enregistrement.</p>
+              <div class="settings-hero-preview"><img id="settingHeroPreview" src="assets/hero-showroom.webp" alt="Aperçu de la bannière d’accueil" /></div>
+              <label class="settings-upload">Nouvelle image<input id="settingHeroFile" type="file" accept="image/jpeg,image/png,image/webp" /></label>
+              <label class="check-line"><input id="settingHeroReset" type="checkbox" /> Revenir à l’image d’origine du site</label>
+            </div>
+            <div class="form-actions"><p class="admin-status" id="settingsStatus" role="status"></p><button class="btn btn-primary" id="saveSettings" type="submit">Enregistrer les modifications</button></div>
           </form>
         </section>
       </main>
