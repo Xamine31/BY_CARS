@@ -44,15 +44,19 @@
   </div>
 
   <div class="admin-layout" id="dashboard" hidden>
-    <aside class="admin-sidebar">
-      <img src="assets/logo-bycars-clean.png" alt="BY CARS" class="admin-logo" />
+    <aside class="admin-sidebar" aria-label="Administration BY CARS">
+      <div class="admin-sidebar-header">
+        <img src="assets/logo-bycars-clean.png" alt="BY CARS" class="admin-logo" />
+        <button class="admin-logout" id="logoutBtn" type="button">Se déconnecter</button>
+      </div>
       <div class="admin-nav-label">Gestion du showroom</div>
-      <button class="admin-nav-item active" data-view="vehicles">Véhicules</button>
-      <button class="admin-nav-item" data-view="form">Ajouter un véhicule</button>
-      <button class="admin-nav-item" data-view="settings">Coordonnées &amp; personnalisation</button>
+      <nav class="admin-nav-links" aria-label="Rubriques de l'administration">
+        <button class="admin-nav-item active" data-view="vehicles" type="button"><span class="nav-label-desktop">Véhicules</span><span class="nav-label-mobile">Stock</span></button>
+        <button class="admin-nav-item" data-view="form" type="button"><span class="nav-label-desktop">Ajouter un véhicule</span><span class="nav-label-mobile">Ajouter</span></button>
+        <button class="admin-nav-item" data-view="settings" type="button"><span class="nav-label-desktop">Coordonnées &amp; personnalisation</span><span class="nav-label-mobile">Paramètres</span></button>
+      </nav>
       <div class="admin-sidebar-spacer"></div>
       <a class="admin-public-link" href="stock.html" target="_blank" rel="noreferrer">Voir le site public ↗</a>
-      <button class="admin-logout" id="logoutBtn">Se déconnecter</button>
     </aside>
 
     <div class="admin-main">

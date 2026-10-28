@@ -81,3 +81,29 @@
  .hero-copy{max-width:900px}
  .hero-side{display:none}
 }
+
+/* V3 : Le formulaire de contact est une colonne indépendante à côté des coordonnées.
+   Sur écran étroit, les deux blocs se suivent pour conserver une bonne lisibilité. */
+.contact-layout {align-items:start;}
+.contact-info,.contact-form {min-width:0;}
+.contact-info {max-width:none;}
+.contact-list a,.contact-list>div {min-width:0;}
+.contact-list b {overflow-wrap:anywhere;}
+.contact-form {width:100%;}
+@media (min-width:850px) {
+  .contact-layout {grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);gap:clamp(26px,4vw,70px);}
+}
+@media (max-width:849px) {
+  .contact-layout {grid-template-columns:minmax(0,1fr);gap:34px;}
+}
+@media (max-width:680px) {
+  .contact-layout {gap:27px;}
+  .contact-info h2 {font-size:clamp(2rem,8vw,2.5rem);}
+  .contact-list a,.contact-list>div {gap:10px;}
+  .contact-list b {font-size:.76rem;}
+}
+/* Empêche la largeur intrinsèque des champs de provoquer un défilement sur PC. */
+.contact-form .form-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+.contact-form .form-field {min-width:0;}
+.contact-form input,.contact-form textarea {display:block;max-width:100%;width:100%;min-width:0;}
+@media(max-width:680px){.contact-form .form-grid{grid-template-columns:minmax(0,1fr);}}

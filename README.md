@@ -83,3 +83,10 @@ Les réseaux sociaux non renseignés et l'e-mail absent ne seront pas affichés 
 - Si vous rencontrez une erreur « relation site_settings does not exist », exécutez la migration SQL indiquée plus haut.
 - Le site n'envoie pas automatiquement de messages WhatsApp : le visiteur doit confirmer dans l'application WhatsApp.
 - Les visuels de véhicules et les informations fournies par `seed.sql` ne garantissent pas la disponibilité réelle d'un véhicule.
+
+
+## Version V3 — affichage ordinateur et mobile
+
+- **Contact** : formulaire « Votre demande » placé à côté des coordonnées sur les écrans d'ordinateur (à partir de 850 px), et sous les coordonnées sur tablette étroite et téléphone. L'envoi WhatsApp reste inchangé.
+- **Administration mobile** : barre supérieure compacte, navigation tactile « Stock / Ajouter / Paramètres », tableau du stock lisible avec prix et statut, boutons plus grands, champs sur une colonne, aperçus photo responsives.
+- **Supabase** : aucune migration SQL supplémentaire nécessaire. Les anciennes coordonnées et annonces sont conservées ; `config.js` et les scripts SQL restent identiques à V2/modifications précédentes.

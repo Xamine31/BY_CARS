@@ -87,7 +87,7 @@ function renderAdminList(){
     <img class="admin-thumb" src="${esc(firstPhoto(v))}" alt="" />
     <div class="admin-vehicle-name"><b>${esc(v.brand)} ${esc(v.model)}</b><span>${esc(v.trim||'')}</span></div>
     <div class="admin-row-meta"><b>${v.price_ht==null?'Sur devis':`${fmtPrice(v.price_ht)} HT`}</b><span>${esc(v.year||'')} · ${new Intl.NumberFormat('fr-FR').format(Number(v.mileage||0))} km</span></div>
-    <div><span class="admin-status-pill ${v.published?'':'draft'}">${v.published?'Publié':'Brouillon'}</span></div>
+    <div class="admin-row-status"><span class="admin-status-pill ${v.published?'':'draft'}">${v.published?'Publié':'Brouillon'}</span></div>
     <div class="row-actions"><button data-edit="${esc(v.id)}">Modifier</button><button class="delete" data-delete="${esc(v.id)}">Supprimer</button></div>
   </div>`).join('')
   $$('[data-edit]').forEach(b=>b.onclick=()=>editVehicle(b.dataset.edit))
@@ -100,15 +100,19 @@ function showVehiclesView(){
   $('#formView').hidden=true
   $('#settingsView').hidden=true
   $('#adminTitle').textContent='Véhicules'
+  $('#quickAdd').hidden=false
   $$('.admin-nav-item').forEach(x=>x.classList.toggle('active',x.dataset.view==='vehicles'))
+  window.scrollTo({top:0,behavior:'smooth'})
 }
 function showFormView(edit=false){
   $('#vehiclesView').hidden=true
   $('#formView').hidden=false
   $('#settingsView').hidden=true
   $('#adminTitle').textContent=edit?'Modifier le véhicule':'Ajouter un véhicule'
+  $('#quickAdd').hidden=true
   $$('.admin-nav-item').forEach(x=>x.classList.toggle('active',x.dataset.view==='form'))
   if(!edit)resetForm()
+  window.scrollTo({top:0,behavior:'smooth'})
 }
 $$('.admin-nav-item').forEach(b=>b.onclick=()=>b.dataset.view==='form'?showFormView(false):b.dataset.view==='settings'?showSettingsView():showVehiclesView())
 $('#quickAdd')?.addEventListener('click',()=>showFormView(false))
@@ -299,6 +303,7 @@ function showSettingsView(){
   $('#formView').hidden=true
   $('#settingsView').hidden=false
   $('#adminTitle').textContent='Coordonnées & personnalisation'
+  $('#quickAdd').hidden=true
   $$('.admin-nav-item').forEach(x=>x.classList.toggle('active',x.dataset.view==='settings'))
   window.scrollTo({top:0,behavior:'smooth'})
 }
