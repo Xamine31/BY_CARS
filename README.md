@@ -14,6 +14,12 @@ Site vitrine automobile multipage pour **SARL BY Cars, Marseille**. La navigatio
 
 Le formulaire Contact prépare un message WhatsApp, puis **le visiteur confirme l'envoi dans WhatsApp**. Il utilise par défaut `+33 6 15 10 06 28`, distinct du numéro direct appels/WhatsApp `+33 6 18 17 59 11`.
 
+## Nouveau dans cette version
+
+- Catalogue et fiches améliorés pour mobiles (320 à 1440 px), y compris si les modèles, finitions ou statuts sont longs.
+- Un statut d'annonce supplémentaire **« Disponible prochainement »**, distinct des options **Disponible** et **Indisponible**. Ce statut est affiché sur les cartes, les fiches, et dans la liste admin. Il est **indépendant de Publié** : une annonce marquée « Disponible prochainement » peut être visible ou non selon l'interrupteur « Publié ».
+- Textes publics harmonisés autour de « société automobile » plutôt que l’ancienne terminologie.
+
 ## Mise en place de Supabase — NOUVELLE BASE
 
 1. Créez un projet sur https://supabase.com ; choisissez un mot de passe sécurisé pour la base.
@@ -28,9 +34,11 @@ Le SQL crée `vehicles`, `admins`, `contact_requests`, **`site_settings`**, ains
 
 Ne recréez pas les tables ni les comptes. Dans Supabase > SQL Editor, exécutez **uniquement** :
 
-**`supabase/migration-site-settings.sql`**
+**`supabase/migration-site-settings.sql`** (si votre installation ne dispose pas encore de cette table)
 
-Cette migration crée la table de paramètres (`site_settings`), insère les réglages par défaut, crée le bucket `site-media` et protège l'édition par des règles RLS. Le texte « Sur devis » reste supporté depuis la version V2. Si votre base est plus ancienne que V2, exécutez aussi **`supabase/migration-prix-sur-devis.sql`**.
+Pour la nouvelle option de disponibilité, exécutez **`supabase/migration-disponibilite-prochainement.sql`**. C’est indispensable **avant de publier la nouvelle version**, afin que l’admin puisse enregistrer le statut. Cette migration conserve vos véhicules existants, ainsi que leur état Disponible/Indisponible.
+
+La migration des paramètres crée la table de paramètres (`site_settings`), insère les réglages par défaut, crée le bucket `site-media` et protège l'édition par des règles RLS. Le texte « Sur devis » reste supporté depuis la version V2. Si votre base est plus ancienne que V2, exécutez aussi **`supabase/migration-prix-sur-devis.sql`**.
 
 ### Valeurs par défaut de la migration
 
@@ -38,7 +46,7 @@ Cette migration crée la table de paramètres (`site_settings`), insère les ré
 - Appels / WhatsApp direct : `06 18 17 59 11` (international : `33618175911`)
 - WhatsApp du formulaire Contact : `+33 6 15 10 06 28` (international : `33615100628`)
 - E-mail et liens de réseaux sociaux vides — à renseigner dans l'admin.
-- Image d'accueil par défaut : `assets/hero-showroom.webp`.
+- Image d'accueil par défaut : `assets/hero-by-cars.webp`.
 
 ## Relier GitHub Pages à Supabase
 
@@ -90,3 +98,13 @@ Les réseaux sociaux non renseignés et l'e-mail absent ne seront pas affichés 
 - **Contact** : formulaire « Votre demande » placé à côté des coordonnées sur les écrans d'ordinateur (à partir de 850 px), et sous les coordonnées sur tablette étroite et téléphone. L'envoi WhatsApp reste inchangé.
 - **Administration mobile** : barre supérieure compacte, navigation tactile « Stock / Ajouter / Paramètres », tableau du stock lisible avec prix et statut, boutons plus grands, champs sur une colonne, aperçus photo responsives.
 - **Supabase** : aucune migration SQL supplémentaire nécessaire. Les anciennes coordonnées et annonces sont conservées ; `config.js` et les scripts SQL restent identiques à V2/modifications précédentes.
+
+### Mettre à jour une base existante (étapes rapides)
+
+1. Supabase → **SQL Editor** → nouveau script.
+2. Copiez-collez `supabase/migration-disponibilite-prochainement.sql`, puis cliquez **Run**.
+3. Sur GitHub, remplacez les fichiers du site avec ceux de cette archive (conservez votre `config.js` personnalisé).
+4. Dans `admin.html`, ouvrez un véhicule → **Publication → Disponibilité du véhicule** → choisissez **Disponible prochainement** → **Enregistrer**.
+5. Le badge orange « Disponible prochainement » apparaît sur la fiche et sur le catalogue si le véhicule est **Publié**.
+
+**Ne réexécutez pas `seed.sql` sur votre vrai stock**, car les données d'exemple pourraient écraser des annonces portant les mêmes identifiants. Les annonces existantes restent intactes lors de la migration.

@@ -9,6 +9,13 @@ export const fmtPrice = value => (value === null || value === undefined || value
 export const fmtKm = value => `${new Intl.NumberFormat('fr-FR').format(Number(value || 0))} km`
 export const safePhotos = vehicle => Array.isArray(vehicle?.photos) && vehicle.photos.filter(Boolean).length ? vehicle.photos.filter(Boolean) : ['assets/car-placeholder-1.svg']
 
+/** Garde la compatibilité avec les annonces créées avant la migration SQL. */
+export function availabilityOf(vehicle){
+  const value=vehicle?.availability_status
+  return ['available','coming_soon','unavailable'].includes(value) ? value : (vehicle?.available===false ? 'unavailable' : 'available')
+}
+export const availabilityLabels={available:'Disponible',coming_soon:'Disponible prochainement',unavailable:'Indisponible'}
+
 export async function loadVehicles(){
   if(!isSupabaseConfigured()) return []
   try{
@@ -50,13 +57,14 @@ export function vehicleUrl(vehicle){
 
 export function vehicleCard(vehicle){
   const photos = safePhotos(vehicle)
-  const available = vehicle.available !== false
+  const availability=availabilityOf(vehicle)
+  const availabilityClass=availability==='coming_soon'?'is-soon':availability==='unavailable'?'is-off':''
   return `<article class="car-card">
     <a class="car-media" href="${vehicleUrl(vehicle)}" aria-label="Voir ${esc(vehicle.brand)} ${esc(vehicle.model)}">
       <img src="${esc(photos[0])}" alt="${esc(vehicle.brand)} ${esc(vehicle.model)}" loading="lazy" />
       <div class="car-badges">
         <span class="tag ${vehicle.condition==='neuf'?'tag-new':''}">${vehicle.condition==='neuf'?'Neuf':'Occasion'}</span>
-        <span class="tag tag-availability ${available?'':'is-off'}">${available?'Disponible':'Indisponible'}</span>
+        <span class="tag tag-availability ${availabilityClass}">${availabilityLabels[availability]}</span>
       </div>
       ${photos.length>1?`<span class="photo-pill">${photos.length} photos</span>`:''}
     </a>
@@ -113,7 +121,7 @@ function updateContactUi(){
     section.hidden=!node.children.length
   })
   $$('.js-hero-image').forEach(img=>{
-    img.src=externalWebUrl(liveSettings.hero_image_url)||'assets/hero-showroom.webp'
+    img.src=externalWebUrl(liveSettings.hero_image_url)||'assets/hero-by-cars.webp'
   })
 }
 function initNavigation(){

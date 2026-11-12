@@ -107,3 +107,62 @@
 .contact-form .form-field {min-width:0;}
 .contact-form input,.contact-form textarea {display:block;max-width:100%;width:100%;min-width:0;}
 @media(max-width:680px){.contact-form .form-grid{grid-template-columns:minmax(0,1fr);}}
+
+
+/* V4 : cartes robustes pour un stock important et des noms/finissions longs. */
+html,body{max-width:100%;}
+body{overflow-x:clip;}
+.container,.stock-layout,.stock-main,.vehicle-grid,.stock-grid,.car-card,.car-content,.vehicle-shell,.detail-gallery,.detail-card{min-width:0;}
+.vehicle-grid{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;}
+.stock-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;}
+.car-card{display:flex;flex-direction:column;max-width:100%;height:100%;}
+.car-media{flex:none;min-width:0;}
+.car-badges{right:12px;max-width:calc(100% - 24px);gap:6px;}
+.tag{max-width:100%;height:auto;min-height:28px;padding-block:6px;line-height:1.25;text-align:center;overflow-wrap:anywhere;white-space:normal;}
+.tag-availability.is-soon{background:rgba(187,108,19,.95);color:#fff;}
+.car-content{flex:1;display:flex;flex-direction:column;min-width:0;}
+.car-content h3{line-height:1.24;overflow-wrap:anywhere;hyphens:auto;}
+.car-overline{min-width:0;align-items:start;}
+.car-overline span{min-width:0;overflow-wrap:anywhere;}
+.car-overline span:last-child{flex:0 0 auto;}
+.car-trim{white-space:normal;overflow:visible;text-overflow:clip;min-height:2.3em;line-height:1.45;overflow-wrap:anywhere;}
+.car-specs{margin-top:12px;margin-bottom:16px;min-width:0;}
+.car-specs span{min-width:0;overflow-wrap:anywhere;word-break:normal;}
+.car-footer{margin-top:auto;align-items:center;min-width:0;gap:12px;}
+.car-footer>div{min-width:0;}
+.car-footer strong{overflow-wrap:anywhere;line-height:1.2;}
+.arrow-link{flex:0 0 39px;}
+.detail-card h1,.detail-trim,.detail-description,.detail-price strong,.detail-spec strong{overflow-wrap:anywhere;}
+.detail-specs{grid-template-columns:repeat(3,minmax(0,1fr));}
+.detail-spec{min-width:0;}
+.gallery-thumbs{max-width:100%;}
+.detail-tags .tag.is-soon,.tag-availability.is-soon{background:#bd7519;color:#fff;}
+@media(max-width:1040px){
+  .vehicle-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:680px){
+  .vehicle-grid,.stock-grid{grid-template-columns:minmax(0,1fr);}
+  .car-content{padding:17px;}
+  .car-media{aspect-ratio:1.5/1;}
+  .car-content h3{font-size:clamp(1.2rem,5vw,1.45rem);}
+  .car-footer strong{font-size:clamp(1.02rem,4vw,1.17rem);}
+  .car-trim{min-height:0;}
+  .car-specs span{font-size:.64rem;}
+  .detail-specs{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .gallery-main{min-width:0;}
+  .gallery-main img{max-width:100%;}
+  .footer-grid,.footer-bottom{min-width:0;}
+  .footer-grid>div{min-width:0;}
+  .footer a,.footer span,.footer p{overflow-wrap:anywhere;}
+}
+@media(max-width:360px){
+  .car-badges{left:8px;top:8px;right:8px;gap:4px;}
+  .tag{font-size:.54rem;padding:5px 7px;}
+  .car-specs{gap:5px;}
+  .car-specs span{padding:6px;}
+  .page-title h1{font-size:clamp(2.05rem,10.5vw,2.8rem);}
+  .detail-specs{grid-template-columns:minmax(0,1fr);}
+}
+/* Contient les galeries horizontales dans la colonne de la fiche sur petits écrans. */
+.vehicle-shell > div,.gallery-thumbs,.breadcrumb,.detail-gallery,.stock-main{min-width:0;max-width:100%;}
+.gallery-thumbs{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}

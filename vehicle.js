@@ -1,19 +1,40 @@
-import { $, esc, fmtKm, fmtPrice, loadVehicle, safePhotos, whatsappLink, siteSettingsReady } from './common.js'
+import { $, esc, fmtKm, fmtPrice, loadVehicle, safePhotos, whatsappLink, siteSettingsReady, availabilityOf, availabilityLabels } from './common.js'
 
 const id = new URLSearchParams(location.search).get('id')
 const vehicle = await loadVehicle(id)
 
 if(!vehicle){
+  const robots=document.createElement('meta'); robots.name='robots'; robots.content='noindex,follow'; document.head.append(robots)
   $('#vehiclePage').innerHTML = `<section class="not-found"><div class="container narrow"><span class="eyebrow">Véhicule introuvable</span><h1>Cette fiche n’est plus disponible.</h1><p>Le véhicule a peut-être été vendu ou retiré du catalogue.</p><a class="btn btn-primary" href="stock.html">Retour au stock</a></div></section>`
 }else{
   const photos = safePhotos(vehicle)
   let index = 0
-  document.title = `${vehicle.brand} ${vehicle.model} — BY CARS`
+  document.title = `${vehicle.brand} ${vehicle.model} | Véhicule à Marseille — BY CARS`
+  // Google renders JavaScript; create a unique canonical and description for each vehicle.
+  const publicUrl = new URL('vehicule.html', location.href)
+  publicUrl.searchParams.set('id', String(vehicle.id))
+  const vehicleDescription = `${vehicle.brand} ${vehicle.model}${vehicle.trim ? ' '+vehicle.trim : ''}, ${vehicle.year || 'année à préciser'} — ${vehicle.condition === 'neuf' ? 'neuf' : 'occasion'}. Prix ${vehicle.price_ht == null ? 'sur devis' : fmtPrice(vehicle.price_ht)+' HT'}. BY CARS Marseille.`
+  const setMeta = (name, content, attr='name') => {
+    let node = document.head.querySelector(`meta[${attr}="${name}"]`)
+    if (!node) { node=document.createElement('meta'); node.setAttribute(attr,name); document.head.append(node) }
+    node.content = content
+  }
+  let canonical = document.head.querySelector('link[rel="canonical"]')
+  if (!canonical) { canonical=document.createElement('link'); canonical.rel='canonical'; document.head.append(canonical) }
+  canonical.href = publicUrl.toString()
+  setMeta('description',vehicleDescription)
+  setMeta('og:type','product','property')
+  setMeta('og:title',document.title,'property')
+  setMeta('og:description',vehicleDescription,'property')
+  setMeta('og:url',publicUrl.toString(),'property')
+  setMeta('og:image',new URL(photos[0],location.href).toString(),'property')
   const title = `${vehicle.brand||''} ${vehicle.model||''}`.trim()
   $('#vehicleBreadcrumbName').textContent = title
   $('#vehicleCondition').textContent = vehicle.condition==='neuf' ? 'Véhicule neuf' : 'Véhicule d’occasion'
-  $('#vehicleAvailability').textContent = vehicle.available===false ? 'Indisponible' : 'Disponible'
-  $('#vehicleAvailability').classList.toggle('is-off',vehicle.available===false)
+  const availability=availabilityOf(vehicle)
+  $('#vehicleAvailability').textContent = availabilityLabels[availability]
+  $('#vehicleAvailability').classList.toggle('is-off',availability==='unavailable')
+  $('#vehicleAvailability').classList.toggle('is-soon',availability==='coming_soon')
   $('#vehicleTitle').textContent = title
   $('#vehicleTrim').textContent = vehicle.trim || 'Finition à préciser'
   $('#vehiclePrice').textContent = fmtPrice(vehicle.price_ht)

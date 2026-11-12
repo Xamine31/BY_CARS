@@ -23,6 +23,8 @@ create table if not exists public.vehicles (
   photos text[] not null default '{}',
   featured boolean not null default false,
   available boolean not null default true,
+  availability_status text not null default 'available'
+    check (availability_status in ('available', 'coming_soon', 'unavailable')),
   published boolean not null default true,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

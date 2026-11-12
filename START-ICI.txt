@@ -1,11 +1,31 @@
-BY CARS — NOUVELLE VERSION
+BY CARS — VERSION V4 : MOBILE & DISPONIBILITÉ PROCHAINEMENT
 
-1. Si Supabase est déjà configuré : exécutez supabase/migration-site-settings.sql dans Supabase > SQL Editor.
-2. Si Supabase est neuf : exécutez supabase/schema.sql puis créez votre utilisateur Auth et donnez-lui accès avec supabase/add-admin.sql.
-3. Dans config.js, mettez votre URL Supabase et votre clé publishable.
-4. Envoyez le CONTENU du dossier sur GitHub et faites Commit changes.
-5. Sur GitHub : Settings > Pages > GitHub Actions.
-6. Accès admin : https://VOTRE-COMPTE.github.io/VOTRE-DEPOT/admin.html
-7. Depuis l'admin : Coordonnées & personnalisation pour les réseaux, adresses, numéros et image d'accueil.
+IMPORTANT : si votre base Supabase existe déjà, commencez par l'étape 1.
 
-Pour les détails, consultez README.md.
+1. BASE SUPABASE EXISTANTE
+   Supabase > SQL Editor : exécutez :
+   supabase/migration-disponibilite-prochainement.sql
+   Vos véhicules existants ne sont ni supprimés ni remplacés.
+
+   NOUVELLE BASE : exécutez supabase/schema.sql, puis créez votre
+   compte utilisateur dans Authentication > Users et autorisez-le
+   avec supabase/add-admin.sql. Le seed.sql est facultatif et n'est
+   PAS à lancer sur un stock commercial existant.
+
+2. GITHUB PAGES
+   Décompressez ce ZIP. Envoyez son CONTENU à la racine de votre dépôt.
+   CONSERVEZ VOTRE config.js EXISTANT si vous avez déjà connecté Supabase !
+   Faites Commit changes et attendez que le workflow GitHub Pages termine.
+   Ce site est statique : aucun npm ni build nécessaire.
+
+3. ADMINISTRATION
+   https://www.by-cars.fr/admin.html
+   Ajouter / Modifier un véhicule > Publication > Disponibilité du véhicule
+   Valeurs : Disponible / Disponible prochainement / Indisponible.
+   Cochez « Publié » pour que l'annonce soit visible aux visiteurs.
+
+4. DESIGN
+   Cartes et filtres du catalogue mieux adaptés aux téléphones.
+   Mention « société automobile » sur le site à la place de l'ancienne formulation.
+
+Voir README.md pour les détails. Ne communiquez pas de clé secrète Supabase.

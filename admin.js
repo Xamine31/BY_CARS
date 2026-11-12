@@ -17,6 +17,8 @@ function showOnly(id){['setupScreen','loginScreen','deniedScreen','dashboard'].f
 function status(el,msg,error=false){if(!el)return;el.textContent=msg;el.classList.toggle('is-error',error)}
 function photoList(v){return Array.isArray(v?.photos)?v.photos.filter(Boolean):[]}
 function firstPhoto(v){return photoList(v)[0]||'assets/car-placeholder-1.svg'}
+function availabilityOf(v){return ['available','coming_soon','unavailable'].includes(v?.availability_status) ? v.availability_status : (v?.available===false?'unavailable':'available')}
+const availabilityLabels={available:'Disponible',coming_soon:'Disponible prochainement',unavailable:'Indisponible'}
 
 async function init(){
   if(!isSupabaseConfigured()){
@@ -75,7 +77,8 @@ async function loadVehicles(){
 function renderStats(){
   $('#statTotal').textContent=vehicles.length
   $('#statPublished').textContent=vehicles.filter(v=>v.published).length
-  $('#statAvailable').textContent=vehicles.filter(v=>v.available).length
+  $('#statAvailable').textContent=vehicles.filter(v=>availabilityOf(v)==='available').length
+  $('#statUpcoming').textContent=vehicles.filter(v=>availabilityOf(v)==='coming_soon').length
   $('#statFeatured').textContent=vehicles.filter(v=>v.featured).length
 }
 
@@ -87,7 +90,7 @@ function renderAdminList(){
     <img class="admin-thumb" src="${esc(firstPhoto(v))}" alt="" />
     <div class="admin-vehicle-name"><b>${esc(v.brand)} ${esc(v.model)}</b><span>${esc(v.trim||'')}</span></div>
     <div class="admin-row-meta"><b>${v.price_ht==null?'Sur devis':`${fmtPrice(v.price_ht)} HT`}</b><span>${esc(v.year||'')} · ${new Intl.NumberFormat('fr-FR').format(Number(v.mileage||0))} km</span></div>
-    <div class="admin-row-status"><span class="admin-status-pill ${v.published?'':'draft'}">${v.published?'Publié':'Brouillon'}</span></div>
+    <div class="admin-row-status"><span class="admin-status-pill ${v.published?'':'draft'}">${v.published?'Publié':'Brouillon'}</span><span class="admin-status-pill availability-${availabilityOf(v)}">${availabilityLabels[availabilityOf(v)]}</span></div>
     <div class="row-actions"><button data-edit="${esc(v.id)}">Modifier</button><button class="delete" data-delete="${esc(v.id)}">Supprimer</button></div>
   </div>`).join('')
   $$('[data-edit]').forEach(b=>b.onclick=()=>editVehicle(b.dataset.edit))
@@ -173,7 +176,7 @@ function resetForm(){
   $('#mileage').value='0'
   $('#doors').value='5'
   $('#seats').value='5'
-  $('#available').checked=true
+  $('#availabilityStatus').value='available'
   $('#published').checked=true
   $('#featured').checked=false
   $('#formKicker').textContent='Nouveau véhicule'
@@ -207,7 +210,7 @@ function editVehicle(id){
   $('#doors').value=v.doors||5
   $('#seats').value=v.seats||5
   $('#description').value=v.description||''
-  $('#available').checked=v.available!==false
+  $('#availabilityStatus').value=availabilityOf(v)
   $('#published').checked=v.published!==false
   $('#featured').checked=Boolean(v.featured)
   $('#formKicker').textContent='Modification'
@@ -266,7 +269,8 @@ $('#vehicleForm')?.addEventListener('submit',async e=>{
       seats:$('#seats').value?Number($('#seats').value):null,
       description:$('#description').value.trim()||null,
       photos,
-      available:$('#available').checked,
+      available:$('#availabilityStatus').value==='available',
+      availability_status:$('#availabilityStatus').value,
       published:$('#published').checked,
       featured:$('#featured').checked
     }
@@ -317,7 +321,7 @@ function renderAdminSettings(){
 function resetHeroPreview(){
   if(heroPreviewUrl) URL.revokeObjectURL(heroPreviewUrl)
   heroPreviewUrl=null
-  $('#settingHeroPreview').src=externalWebUrl(currentSiteSettings.hero_image_url)||'assets/hero-showroom.webp'
+  $('#settingHeroPreview').src=externalWebUrl(currentSiteSettings.hero_image_url)||'assets/hero-by-cars.webp'
 }
 async function loadAdminSettings(){
   try{
@@ -348,7 +352,7 @@ $('#settingHeroFile')?.addEventListener('change',()=>{
   status($('#settingsStatus'),'Aperçu prêt. Enregistrez pour publier cette image.')
 })
 $('#settingHeroReset')?.addEventListener('change',e=>{
-  if(e.target.checked){$('#settingHeroFile').value='';resetHeroPreview();$('#settingHeroPreview').src='assets/hero-showroom.webp'}
+  if(e.target.checked){$('#settingHeroFile').value='';resetHeroPreview();$('#settingHeroPreview').src='assets/hero-by-cars.webp'}
   else resetHeroPreview()
 })
 $('#settingsForm')?.addEventListener('submit',async event=>{

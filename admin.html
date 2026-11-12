@@ -49,7 +49,7 @@
         <img src="assets/logo-bycars-clean.png" alt="BY CARS" class="admin-logo" />
         <button class="admin-logout" id="logoutBtn" type="button">Se déconnecter</button>
       </div>
-      <div class="admin-nav-label">Gestion du showroom</div>
+      <div class="admin-nav-label">Gestion automobile</div>
       <nav class="admin-nav-links" aria-label="Rubriques de l'administration">
         <button class="admin-nav-item active" data-view="vehicles" type="button"><span class="nav-label-desktop">Véhicules</span><span class="nav-label-mobile">Stock</span></button>
         <button class="admin-nav-item" data-view="form" type="button"><span class="nav-label-desktop">Ajouter un véhicule</span><span class="nav-label-mobile">Ajouter</span></button>
@@ -71,6 +71,7 @@
             <div><span>Total</span><b id="statTotal">0</b></div>
             <div><span>Publiés</span><b id="statPublished">0</b></div>
             <div><span>Disponibles</span><b id="statAvailable">0</b></div>
+            <div><span>Prochainement</span><b id="statUpcoming">0</b></div>
             <div><span>À la une</span><b id="statFeatured">0</b></div>
           </div>
           <div class="admin-card list-card">
@@ -113,7 +114,7 @@
             <div class="form-section"><h3>Photos</h3><div class="photo-upload-box"><input id="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple /><b>Ajouter plusieurs photos</b><span>JPG, PNG ou WEBP. Vous pouvez vérifier les images avant l’enregistrement.</span></div><div id="selectedPhotosBlock" class="selected-photos-block" hidden><div class="photo-preview-head"><b>Nouvelles photos</b><span id="selectedPhotosCount"></span></div><div id="selectedPhotosPreview" class="selected-photos-preview"></div></div><div id="existingPhotosBlock" class="existing-photos-block" hidden><div class="photo-preview-head"><b>Photos déjà enregistrées</b></div><div id="existingPhotos" class="existing-photos"></div></div><label class="check-line" id="clearPhotosWrap" hidden><input id="clearPhotos" type="checkbox" /> Supprimer les anciennes photos lors de l’enregistrement</label></div>
 
             <div class="form-section"><h3>Publication</h3><div class="toggle-grid">
-              <label class="toggle-line"><input id="available" type="checkbox" checked /><span><b>Disponible</b><small>Le véhicule peut être demandé.</small></span></label>
+              <div class="availability-control"><label for="availabilityStatus"><b>Disponibilité du véhicule</b><small>Choisissez le statut affiché sur le site.</small></label><select id="availabilityStatus" name="availabilityStatus"><option value="available">Disponible</option><option value="coming_soon">Disponible prochainement</option><option value="unavailable">Indisponible</option></select></div>
               <label class="toggle-line"><input id="published" type="checkbox" checked /><span><b>Publié</b><small>Visible sur le site public.</small></span></label>
               <label class="toggle-line"><input id="featured" type="checkbox" /><span><b>À la une</b><small>Affiché dans la sélection d’accueil.</small></span></label>
             </div></div>
@@ -141,7 +142,7 @@
             </div></div>
             <div class="form-section"><h3>Image principale de l’accueil</h3>
               <p class="field-help">Importez une image JPG, PNG ou WEBP de 8 Mo maximum. Vous pourrez voir son aperçu avant enregistrement.</p>
-              <div class="settings-hero-preview"><img id="settingHeroPreview" src="assets/hero-showroom.webp" alt="Aperçu de la bannière d’accueil" /></div>
+              <div class="settings-hero-preview"><img id="settingHeroPreview" src="assets/hero-by-cars.webp" alt="Aperçu de la bannière d’accueil" /></div>
               <label class="settings-upload">Nouvelle image<input id="settingHeroFile" type="file" accept="image/jpeg,image/png,image/webp" /></label>
               <label class="check-line"><input id="settingHeroReset" type="checkbox" /> Revenir à l’image d’origine du site</label>
             </div>

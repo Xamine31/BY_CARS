@@ -1,0 +1,20 @@
+BY CARS - V4 : MOBILE & DISPONIBILITE PROCHAINEMENT
+
+1. SUR SUPABASE (BASE EXISTANTE) :
+   Supabase > SQL Editor > collez le contenu de :
+   supabase/migration-disponibilite-prochainement.sql
+   Puis cliquez Run.
+
+2. SUR GITHUB :
+   Décompressez le ZIP, puis transférez tout le contenu à la racine de votre dépôt.
+   ATTENTION : conservez votre ancien config.js avec la bonne URL et la clé publishable Supabase.
+   Commit changes. GitHub Pages republie automatiquement (sans npm ni build).
+
+3. SUR L'ADMIN :
+   /admin.html > Ajouter ou modifier une voiture > Publication > Disponibilité du véhicule.
+   Choisir Disponible / Disponible prochainement / Indisponible.
+   Le statut de publication « Publié » reste séparé.
+
+Le contenu du site est maintenant présenté comme une société automobile, et la mise en page mobile du catalogue a été renforcée.
+
+IMPORTANT : ne lancez pas seed.sql sur votre vrai stock.

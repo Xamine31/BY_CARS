@@ -118,3 +118,38 @@
   .admin-topbar .btn {padding:0 10px;font-size:.68rem;}
   .admin-content {padding-inline:9px;}
 }
+
+
+/* V4 : trois états de disponibilité, avec sélecteur tactile accessible. */
+.availability-control{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,260px);gap:16px;align-items:center;padding:15px 16px;background:#fff8f3;border:1px solid #fbd6c5;border-radius:14px;min-width:0;}
+.availability-control label{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.availability-control b{font-size:.81rem;color:#263346;}
+.availability-control small{font-size:.68rem;font-weight:500;color:#697489;}
+.availability-control select{min-width:0;max-width:100%;width:100%;min-height:47px;background:#fff;border:1px solid #e7c3b2;border-radius:10px;color:#182235;padding:9px 12px;}
+.admin-stats{grid-template-columns:repeat(5,minmax(0,1fr));}
+.admin-row-status{display:flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.admin-status-pill{white-space:normal;line-height:1.2;max-width:100%;}
+.admin-status-pill.availability-coming_soon{background:#fff1d7;color:#995f10;}
+.admin-status-pill.availability-unavailable{background:#f2f4f6;color:#667182;}
+.admin-status-pill.availability-available{background:#e6f6ed;color:#1e7049;}
+.admin-vehicle-row{grid-template-columns:78px minmax(145px,1.2fr) minmax(120px,.8fr) minmax(135px,.9fr) auto;}
+.admin-vehicle-name,.admin-row-meta,.admin-row-status,.row-actions{min-width:0;}
+.admin-vehicle-name b,.admin-vehicle-name span,.admin-row-meta b{overflow-wrap:anywhere;}
+@media(max-width:1200px){
+ .admin-stats{grid-template-columns:repeat(3,minmax(0,1fr));}
+ .admin-vehicle-row{grid-template-columns:70px minmax(0,1fr) minmax(145px,.8fr) auto;}
+ .admin-row-status{grid-column:2/4;}
+}
+@media(max-width:950px){
+ .admin-vehicle-row{grid-template-columns:70px minmax(0,1fr) auto;}
+ .admin-row-status{grid-column:2/4;}
+ .admin-stats{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media(max-width:620px){
+ .admin-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+ .admin-vehicle-row{grid-template-columns:68px minmax(0,1fr);grid-template-areas:'thumb name' 'thumb meta' 'thumb status' 'actions actions';}
+ .admin-row-status{grid-column:auto;grid-area:status;}
+ .availability-control{grid-template-columns:minmax(0,1fr);gap:10px;padding:13px;}
+ .availability-control select{font-size:16px;}
+ .admin-nav-links{max-width:100%;}
+}
