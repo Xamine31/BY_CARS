@@ -100,7 +100,7 @@ function updateContactUi(){
   $$('.js-phone-link').forEach(el=>el.href=`tel:+${digits(liveSettings.phone_intl)||'33618175911'}`)
   $$('.js-address').forEach(el=>el.textContent=liveSettings.address||defaultSettings.address)
   $$('.js-email-link').forEach(el=>{
-    const email=safeEmail(liveSettings.email)
+    const email=safeEmail(liveSettings.email)||'info@by-cars.fr'
     el.hidden=!email
     if(email){el.href=`mailto:${email}`;const child=el.querySelector('b');if(child)child.textContent=email}
   })

@@ -166,3 +166,8 @@ body{overflow-x:clip;}
 /* Contient les galeries horizontales dans la colonne de la fiche sur petits écrans. */
 .vehicle-shell > div,.gallery-thumbs,.breadcrumb,.detail-gallery,.stock-main{min-width:0;max-width:100%;}
 .gallery-thumbs{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;}
+
+/* V5 — Formulaire contact e-mail */
+.honey-field{position:absolute!important;left:-9999px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important;}
+.mail-fallback-link{display:inline-flex;color:#e86c37;font-size:.88rem;text-decoration:underline;text-underline-offset:3px;font-weight:750;margin-top:4px;overflow-wrap:anywhere;}
+.contact-form .btn:disabled{opacity:.65;cursor:wait;}

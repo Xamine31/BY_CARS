@@ -153,3 +153,19 @@
  .availability-control select{font-size:16px;}
  .admin-nav-links{max-width:100%;}
 }
+
+/* V5 — Gestion sécurisée du compte administrateur */
+.account-card{margin-top:20px;padding:26px;min-width:0;}
+.account-card .form-title{margin-bottom:13px;}
+.account-current{font-size:.85rem;color:#526074;overflow-wrap:anywhere;margin:0 0 22px;}
+.account-current strong{color:#101c2f;}
+.account-form{display:grid;gap:14px;border-top:1px solid #e8ebef;padding:25px 0 6px;min-width:0;}
+.account-form h3{font-size:1rem;margin:0;color:#111e32;}
+.account-form p{margin:0;line-height:1.6;}
+.account-form>label,.account-form .admin-form-grid label{display:flex;flex-direction:column;gap:8px;min-width:0;font-size:.75rem;font-weight:700;color:#344255;}
+.account-form input{width:100%;min-width:0;min-height:46px;border:1px solid #dbe1e8;border-radius:12px;padding:10px 13px;font-size:16px;color:#15243b;background:#fff;}
+.account-form input:focus{outline:2px solid rgba(255,100,38,.32);border-color:#ff6426;}
+.account-form>.btn{justify-self:start;max-width:100%;white-space:normal;text-align:center;}
+.account-info-note{grid-column:1/-1;background:#fff5ef;color:#634532;border:1px solid #f7ddcd;border-radius:12px;padding:13px 16px;font-size:.78rem;line-height:1.6;}
+.account-form .admin-status{overflow-wrap:anywhere;}
+@media(max-width:620px){.account-card{padding:18px 14px;}.account-form>.btn{width:100%;min-height:48px;}.account-form{gap:12px;padding-top:22px;} .account-current{font-size:.79rem;}}

@@ -5,7 +5,7 @@ export const defaultSettings = Object.freeze({
   phone_display: config.phoneDisplay || '06 18 17 59 11',
   phone_intl: config.phoneIntl || '33618175911',
   form_whatsapp_intl: config.formWhatsappIntl || '33615100628',
-  email: '',
+  email: 'info@by-cars.fr',
   address: '54 Rue de la Joliette, Marseille',
   instagram_url: '', facebook_url: '', tiktok_url: '',
   youtube_url: '', linkedin_url: '',

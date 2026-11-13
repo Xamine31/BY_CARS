@@ -44,6 +44,7 @@ async function verifyAdmin(user){
   await loadVehicles()
   showVehiclesView()
   await loadAdminSettings()
+  await refreshAccountStatus(user)
 }
 
 $('#loginForm')?.addEventListener('submit',async e=>{
@@ -298,7 +299,7 @@ async function deleteVehicle(id){
 
 // Coordonnées, réseaux sociaux et image d’accueil : lecture/écriture réservées aux admins.
 const settingIds={
-  phone_display:'settingPhoneDisplay',phone_intl:'settingPhoneIntl',form_whatsapp_intl:'settingFormPhone',
+  phone_display:'settingPhoneDisplay',phone_intl:'settingPhoneIntl',
   email:'settingEmail',address:'settingAddress',instagram_url:'settingInstagram',facebook_url:'settingFacebook',
   tiktok_url:'settingTiktok',youtube_url:'settingYoutube',linkedin_url:'settingLinkedin'
 }
@@ -364,7 +365,7 @@ $('#settingsForm')?.addEventListener('submit',async event=>{
   try{
     const settings={id:1}
     for(const [key,id] of Object.entries(settingIds))settings[key]=$('#'+id).value.trim()
-    for(const key of ['phone_intl','form_whatsapp_intl']){
+    for(const key of ['phone_intl']){
       settings[key]=digits(settings[key])
       if(settings[key].length<8||settings[key].length>15)throw Error('Vérifiez les numéros internationaux (avec indicatif pays).')
     }
@@ -392,6 +393,73 @@ $('#settingsForm')?.addEventListener('submit',async event=>{
   }catch(error){
     console.error(error)
     status(statusEl,error?.message||'Enregistrement impossible.',true)
+  }finally{button.disabled=false}
+})
+
+// Compte administrateur : changement d'e-mail soumis aux validations Supabase,
+// changement de mot de passe exigeant l'ancien mot de passe.
+async function refreshAccountStatus(knownUser=null){
+  try{
+    const {data,error}=knownUser?{data:{user:knownUser},error:null}:await supabase.auth.getUser()
+    if(error)throw error
+    const user=data?.user
+    if(!user)return
+    $('#currentAdminEmail').textContent=user.email||'Adresse inconnue'
+    const target=$('#newAdminEmail')
+    if(target&&!target.dataset.touched)target.value=user.new_email||'contact@by-cars.fr'
+    if(user.new_email && user.new_email!==user.email){
+      status($('#changeAdminEmailStatus'),`Validation en attente pour ${user.new_email}. Vérifiez vos boîtes e-mail.`)
+    }
+  }catch(error){console.warn('Compte admin :',error)}
+}
+$('#newAdminEmail')?.addEventListener('input',()=>{$('#newAdminEmail').dataset.touched='1'})
+$('#changeAdminEmailForm')?.addEventListener('submit',async event=>{
+  event.preventDefault()
+  const email=$('#newAdminEmail').value.trim().toLowerCase()
+  const state=$('#changeAdminEmailStatus')
+  const button=$('#changeAdminEmailBtn')
+  button.disabled=true
+  status(state,'Demande de changement en cours…')
+  try{
+    const {data:{user},error:fetchError}=await supabase.auth.getUser()
+    if(fetchError||!user)throw Error('Veuillez vous reconnecter à l’administration.')
+    if(email===String(user.email||'').toLowerCase())throw Error('Cette adresse est déjà celle de votre compte.')
+    const redirectTo=new URL('admin.html',location.href).href
+    const {error}=await supabase.auth.updateUser({email},{emailRedirectTo:redirectTo})
+    if(error)throw error
+    status(state,`Demande envoyée. Confirmez les messages reçus sur l’ancienne et la nouvelle adresse (selon votre configuration Supabase), puis reconnectez-vous avec ${email}.`)
+    toast('Vérifiez vos e-mails pour confirmer le changement.')
+  }catch(error){
+    console.error('Changement de compte :',error?.message)
+    status(state,error?.message||'Le changement d’e-mail a échoué.',true)
+  }finally{button.disabled=false}
+})
+$('#changePasswordForm')?.addEventListener('submit',async event=>{
+  event.preventDefault()
+  const current=$('#currentAdminPassword').value
+  const password=$('#newAdminPassword').value
+  const confirmPassword=$('#confirmAdminPassword').value
+  const state=$('#changePasswordStatus')
+  const button=$('#changePasswordBtn')
+  if(password.length<12){status(state,'Le nouveau mot de passe doit contenir au moins 12 caractères.',true);return}
+  if(password!==confirmPassword){status(state,'Les deux nouveaux mots de passe ne correspondent pas.',true);return}
+  if(current===password){status(state,'Choisissez un mot de passe différent de l’actuel.',true);return}
+  button.disabled=true
+  status(state,'Vérification du mot de passe actuel…')
+  try{
+    const {data:account,error:accountError}=await supabase.auth.getUser()
+    if(accountError||!account?.user?.email)throw Error('Session expirée. Veuillez vous reconnecter.')
+    const userId=account.user.id
+    const {data:check,error:checkError}=await supabase.auth.signInWithPassword({email:account.user.email,password:current})
+    if(checkError || check?.user?.id!==userId)throw Error('Le mot de passe actuel est incorrect.')
+    status(state,'Mise à jour du mot de passe…')
+    const {error}=await supabase.auth.updateUser({password})
+    if(error)throw error
+    $('#changePasswordForm').reset()
+    status(state,'Mot de passe mis à jour. Utilisez le nouveau mot de passe lors de votre prochaine connexion.')
+    toast('Mot de passe modifié avec succès.')
+  }catch(error){
+    status(state,error?.message||'Impossible de modifier le mot de passe.',true)
   }finally{button.disabled=false}
 })
 

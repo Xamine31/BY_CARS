@@ -1,0 +1,22 @@
+BY CARS V5 — Mise à jour du site public et de l’administration
+
+1. Textes publics : « vendeur automobile » (accords corrigés).
+2. Formulaire Contact : vers info@by-cars.fr, et non WhatsApp.
+   - Fonctionne immédiatement avec une application e-mail via mailto.
+   - Pour l’envoi automatique, déployez Supabase Edge Function + Resend
+     et définissez contactEmailDelivery: 'supabase' dans config.js.
+3. Espace admin > Paramètres > Mon compte : demande de changement de
+   l’e-mail de connexion vers contact@by-cars.fr et changement du mot de passe.
+   - Le changement d’e-mail n’est effectif qu’après confirmation Supabase.
+   - Le mot de passe exige l’ancien, et au moins 12 caractères pour le nouveau.
+4. Les véhicules, les statuts, les photos, le site mobile, SEO et la
+   personnalisation Supabase sont conservés.
+
+IMPORTANT : conserve ta configuration Supabase réelle (URL + clé publique) dans
+config.js avant d'envoyer le ZIP sur GitHub. Ne mets jamais Resend/service_role
+côté navigateur.
+
+CONSULTE : GUIDE-EMAIL-ET-ADMIN.md
+Migrations optionnelles/nouveauté :
+- supabase/migration-synchronisation-email-admin.sql
+- supabase/migration-contact-email.sql (nécessaire pour mode email automatique)
